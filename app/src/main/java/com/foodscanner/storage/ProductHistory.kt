@@ -1,7 +1,7 @@
-package com.example.foodscanner.storage
+package com.foodscanner.storage
 
-import com.example.foodscanner.data.Product
-import com.example.foodscanner.service.ProductParser.parse
+import com.foodscanner.data.Product
+import com.foodscanner.service.ProductParser
 import kotlinx.serialization.json.JsonElement
 
 class ProductHistory(private val storage: Storage) {
@@ -26,7 +26,7 @@ class ProductHistory(private val storage: Storage) {
         val list = mutableListOf<Product>()
 
         for (product in history) {
-            list.add(parse(product))
+            list.add(ProductParser.parse(product))
         }
         return list
     }

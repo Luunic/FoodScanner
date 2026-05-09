@@ -1,8 +1,8 @@
-package com.example.foodscanner.service
+package com.foodscanner.service
 
-import com.example.foodscanner.data.Ingredient
-import com.example.foodscanner.data.Nutriments
-import com.example.foodscanner.data.Product
+import com.foodscanner.data.Ingredient
+import com.foodscanner.data.Nutriments
+import com.foodscanner.data.Product
 import kotlinx.serialization.json.*
 
 // singelton

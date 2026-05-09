@@ -1,4 +1,4 @@
-package com.example.foodscanner.storage
+package com.foodscanner.storage
 
 import kotlinx.serialization.json.JsonElement
 

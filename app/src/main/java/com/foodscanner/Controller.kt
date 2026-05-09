@@ -1,10 +1,10 @@
-package com.example.foodscanner
+package com.foodscanner
 
-import com.example.foodscanner.data.Product
-import com.example.foodscanner.service.OpenFoodFactsApi
-import com.example.foodscanner.service.ProductParser.parse
-import com.example.foodscanner.storage.LocalStorage
-import com.example.foodscanner.storage.ProductHistory
+import com.foodscanner.data.Product
+import com.foodscanner.service.OpenFoodFactsApi
+import com.foodscanner.storage.LocalStorage
+import com.foodscanner.storage.ProductHistory
+import com.foodscanner.service.ProductParser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -41,7 +41,7 @@ class Controller(
                 )
             )
 
-            val parsed = parse(extendedData)
+            val parsed = ProductParser.parse(extendedData)
 
             if (productHistory.getHistory().any {it.getCode() == barcode}) {
                 return parsed

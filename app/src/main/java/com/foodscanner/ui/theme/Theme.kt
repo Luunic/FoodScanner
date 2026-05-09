@@ -1,6 +1,5 @@
-package com.example.foodscanner.ui.theme
+package com.foodscanner.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

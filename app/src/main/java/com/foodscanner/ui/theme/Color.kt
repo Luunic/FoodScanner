@@ -1,4 +1,4 @@
-package com.example.foodscanner.ui.theme
+package com.foodscanner.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

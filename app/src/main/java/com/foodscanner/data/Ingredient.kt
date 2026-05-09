@@ -1,4 +1,4 @@
-package com.example.foodscanner.data
+package com.foodscanner.data
 
 data class Ingredient(
     private val name: String?,

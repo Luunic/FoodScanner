@@ -1,4 +1,4 @@
-package com.example.foodscanner.data
+package com.foodscanner.data
 
 // All in 100g
 data class Nutriments(

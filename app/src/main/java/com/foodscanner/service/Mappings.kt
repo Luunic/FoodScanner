@@ -1,4 +1,4 @@
-package com.example.foodscanner.service
+package com.foodscanner.service
 
 val allergenMap = mapOf(
     "en:milk" to "Milch",
