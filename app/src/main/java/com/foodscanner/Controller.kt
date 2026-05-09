@@ -14,7 +14,7 @@ import java.util.Date
 import java.util.Locale
 
 class Controller(
-    private val productHistory: ProductHistory = ProductHistory(storage = LocalStorage())
+    private val productHistory: ProductHistory
 ) {
 
     private suspend fun getDataFromApi(barcode: String): JsonElement {
@@ -42,7 +42,7 @@ class Controller(
             )
 
             val parsed = ProductParser.parse(extendedData)
-
+            // Check if the product is already in History
             if (productHistory.getHistory().any {it.getCode() == barcode}) {
                 return parsed
             }

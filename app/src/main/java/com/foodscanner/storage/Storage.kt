@@ -7,6 +7,6 @@ interface Storage {
     val maxHistorySize: Int
         get() = 10
 
-    fun loadHistory(fileName: String): MutableList<JsonElement>
-    fun saveHistory(history: MutableList<JsonElement>, fileName: String)
+    fun loadStorage(fileName: String): MutableList<JsonElement>
+    fun saveStorage(storage: MutableList<JsonElement>, fileName: String)
 }

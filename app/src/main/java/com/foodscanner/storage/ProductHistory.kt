@@ -9,19 +9,19 @@ class ProductHistory(private val storage: Storage) {
     val fileName = "history.json"
 
     fun addProduct(product: JsonElement) {
-        val history = storage.loadHistory(fileName)
+        val history = storage.loadStorage(fileName)
 
         history.add(0, product)
 
         if (history.size > storage.maxHistorySize) {
             history.removeAt(history.lastIndex)
         }
-        storage.saveHistory(history, fileName)
+        storage.saveStorage(history, fileName)
 
     }
 
     fun getHistory(): List<Product> {
-        val history = storage.loadHistory(fileName)
+        val history = storage.loadStorage(fileName)
 
         val list = mutableListOf<Product>()
 
@@ -32,8 +32,8 @@ class ProductHistory(private val storage: Storage) {
     }
 
     fun clearHistory() {
-        val history = storage.loadHistory(fileName)
+        val history = storage.loadStorage(fileName)
         history.clear()
-        storage.saveHistory(history, fileName)
+        storage.saveStorage(history, fileName)
     }
 }
