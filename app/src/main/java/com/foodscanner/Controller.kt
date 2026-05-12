@@ -52,10 +52,7 @@ class Controller(
             )
 
             val parsed = ProductParser.parse(extendedData)
-            // Check if the product is already in History
-            if (productHistory.getHistory().any {it.getCode() == barcode}) {
-                return parsed
-            }
+
             productHistory.addProduct(extendedData)
             _historyFlow.value = productHistory.getHistory() // update
             return parsed
