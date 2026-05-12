@@ -6,7 +6,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,32 +51,36 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-                    Button(
-                        onClick = { startBarcodeScanner() },
-                        modifier = Modifier.padding(34.dp),
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Text("Scan Barcode")
-                    }
 
-                    // Example use of History
-                    var fileContent by remember { mutableStateOf("Lade...") }
-                    LaunchedEffect(Unit) {
-                        val productList = controller.getProductHistory()
-                        Log.d(TAG,"ProductListSize: ${productList.size}")
-                        val product: Product
-                        if(productList.isNotEmpty()) {
-                            product = productList.first()
-                            val name: String? = product.getName()
-                            if(name.isNullOrBlank()){ } else {
-                                fileContent = name
-                            }
+                    val productList by controller.historyFlow.collectAsState()
+                    val firstName = productList.firstOrNull()?.getName()
+                        ?.takeIf { it.isNotBlank() } ?: "Kein Produkt"
+
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                    ) {
+                        Button(
+                            onClick = { startBarcodeScanner() },
+                            modifier = Modifier.padding(34.dp),
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
+                            Text("Scan Barcode")
+                        }
+
+                        Text(
+                            text = firstName,
+                            modifier = Modifier.padding(64.dp)
+                        )
+                        Button(
+                            onClick = { controller.clearProductHistory() },
+                            modifier = Modifier.padding(34.dp),
+                        ) {
+                            Text(
+                                text = "Clear History"
+                            )
                         }
                     }
-                    Text(text=fileContent,
-                        modifier = Modifier.padding(64.dp)
-                        )
 
 
 

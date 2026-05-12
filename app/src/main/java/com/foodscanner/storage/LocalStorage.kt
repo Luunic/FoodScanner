@@ -51,6 +51,5 @@ class LocalStorage(private val context: Context): Storage {
         val jsonArray = JsonArray(storage)
 
         storageFile.writeText(jsonArray.toString()) // Write to the File
-
     }
 }

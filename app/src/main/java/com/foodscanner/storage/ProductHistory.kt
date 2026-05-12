@@ -31,9 +31,12 @@ class ProductHistory(private val storage: Storage) {
         return list
     }
 
-    fun clearHistory() {
+    fun clearHistory(): Boolean {
+        var bool = true
         val history = storage.loadStorage(fileName)
+        if(history.isEmpty()) bool = false
         history.clear()
         storage.saveStorage(history, fileName)
+        return bool
     }
 }

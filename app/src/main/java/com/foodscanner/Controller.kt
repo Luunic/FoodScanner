@@ -5,6 +5,9 @@ import com.foodscanner.data.Product
 import com.foodscanner.service.OpenFoodFactsApi
 import com.foodscanner.storage.ProductHistory
 import com.foodscanner.service.ProductParser
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -17,6 +20,10 @@ class Controller(
     private val productHistory: ProductHistory
 ) {
     val TAG = "Controller"
+
+    private val _historyFlow = MutableStateFlow<List<Product>>(productHistory.getHistory())
+    val historyFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
+
     private suspend fun getDataFromApi(barcode: String): JsonElement? {
         // TODO refactor into try block
         // Call the Api
@@ -50,6 +57,7 @@ class Controller(
                 return parsed
             }
             productHistory.addProduct(extendedData)
+            _historyFlow.value = productHistory.getHistory() // update
             return parsed
         }
         return null
@@ -58,7 +66,9 @@ class Controller(
     fun getProductHistory(): List<Product> {
         return productHistory.getHistory()
     }
-    fun clearProductHistory() {
-        productHistory.clearHistory()
+    fun clearProductHistory(): Boolean {
+        val bool = productHistory.clearHistory()
+        _historyFlow.value = emptyList() // update
+        return bool
     }
 }
