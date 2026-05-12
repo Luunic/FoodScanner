@@ -1,8 +1,8 @@
 package com.foodscanner
 
+import android.util.Log
 import com.foodscanner.data.Product
 import com.foodscanner.service.OpenFoodFactsApi
-import com.foodscanner.storage.LocalStorage
 import com.foodscanner.storage.ProductHistory
 import com.foodscanner.service.ProductParser
 import kotlinx.serialization.json.Json
@@ -16,14 +16,17 @@ import java.util.Locale
 class Controller(
     private val productHistory: ProductHistory
 ) {
-
-    private suspend fun getDataFromApi(barcode: String): JsonElement {
+    val TAG = "Controller"
+    private suspend fun getDataFromApi(barcode: String): JsonElement? {
         // TODO refactor into try block
         // Call the Api
-
-        val response = OpenFoodFactsApi.retrofitService.getData(barcode)
-
-        return Json.parseToJsonElement(response) // returns jsonElement
+        try {
+            val response = OpenFoodFactsApi.retrofitService.getData(barcode)
+            return Json.parseToJsonElement(response) // returns jsonElement
+        } catch(e: Exception) {
+            Log.e(TAG, "Exception $e while calling the Api")
+         return null
+        }
     }
 
     // Make this function private when its the time
