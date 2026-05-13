@@ -1,7 +1,6 @@
 package com.foodscanner
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,33 +15,29 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodscanner.data.Product
 import com.foodscanner.storage.LocalStorage
 import com.foodscanner.storage.ProductHistory
 import com.foodscanner.ui.theme.FoodScannerTheme
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
     private lateinit var controller: Controller
+    private lateinit var viewModel: FoodScannerViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val TAG = "MainActivity"
+        val TAG = "MainActivity" // for logging
         controller = Controller(productHistory = ProductHistory(storage = LocalStorage(context = applicationContext)))
+
+        viewModel = FoodScannerViewModel(controller)
         enableEdgeToEdge()
         setContent {
             FoodScannerTheme {
@@ -52,9 +47,14 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
 
-                    val productList by controller.historyFlow.collectAsState()
+                    val productList by viewModel.historyState.collectAsState()
+                    val currentProduct by viewModel.currentProduct.collectAsState()
                     val firstName = productList.firstOrNull()?.getName()
                         ?.takeIf { it.isNotBlank() } ?: "Kein Produkt"
+                    var productNameList = mutableListOf<String?>()
+                    productList.forEach { product ->
+                        productNameList.add(0, product.getName())
+                    }
 
                     Column(
                         modifier = Modifier.padding(24.dp),
@@ -68,12 +68,16 @@ class MainActivity : ComponentActivity() {
                             Text("Scan Barcode")
                         }
 
-                        Text(
-                            text = firstName,
-                            modifier = Modifier.padding(64.dp)
-                        )
+                        Row {
+                            productNameList.forEach { name->
+                                if (name != null) {
+                                    Text(text = name, modifier = Modifier.padding(12.dp))
+                                }
+                            }
+                        }
+
                         Button(
-                            onClick = { controller.clearProductHistory() },
+                            onClick = { viewModel.clearHistory() },
                             modifier = Modifier.padding(34.dp),
                         ) {
                             Text(
@@ -81,9 +85,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-
-
-
                 }
             }
         }
@@ -104,9 +105,20 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { barcode ->
                 val rawValue = barcode.rawValue
                 if (rawValue != null) {
-                    onBarcodeScanned(rawValue)
+                    Toast.makeText(
+                        this,
+                        rawValue,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            }
+                    if(rawValue.isNullOrEmpty()){
+
+                    } else  {
+                        viewModel.scanBarcode(rawValue)
+                    }
+
+                }
+
             .addOnCanceledListener {
 
             }
@@ -119,19 +131,7 @@ class MainActivity : ComponentActivity() {
                 ).show()
             }
     }
-    // TODO move this function with the startBarcodeScanner function
-    private fun onBarcodeScanned(ean: String) {
-        // TODO Do Something with the barcode
-        // Toast.makeText(this, "EAN: $ean", Toast.LENGTH_SHORT).show()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val product = controller.getProductFromBarcode(ean)
-            val name = product?.getName()
-            runOnUiThread {
-                Toast.makeText(this@MainActivity, name?: "Kein Produkt", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 }
 
 

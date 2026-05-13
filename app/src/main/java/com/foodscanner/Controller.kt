@@ -25,7 +25,6 @@ class Controller(
     val historyFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
 
     private suspend fun getDataFromApi(barcode: String): JsonElement? {
-        // TODO refactor into try block
         // Call the Api
         try {
             val response = OpenFoodFactsApi.retrofitService.getData(barcode)
