@@ -1,62 +1,141 @@
 # How to Interact with the Backend
 
-## Setup the Controller
-To start interacting with the Backend you need to initiate a Controller Object.
+## Architecture Overview
 
-`private var controller = Controller(productHistory = ProductHistory(storage = LocalStorage(context = applicationContext)))`
+The backend follows a layered architecture:
 
-Note: This code will probably be different in future when.
+```
+UI Layer  ──►  FoodScannerViewModel  ──►  Controller  ──►  Data Sources
+```
 
-## The Controller
-The Controller Class has following methods you can use: `getProductFromBarcode()` `getProductHistory()` `clearProductHistory()`
+The recommended way to interact with the backend from the UI is through the `FoodScannerViewModel`. It manages state reactively using Kotlin Flows and handles coroutines for you. Direct use of the `Controller` is only necessary if you are working outside of a ViewModel context.
 
-Note: More Functions will be added in the Future.
+---
 
-In the Following you will get a closer look on each of these functions.
-### fun getProductFormBarcode(barcode: String): Product?
-This function takes the barcodeString as a parameter and returns a Product Object. More on that later.
-### fun getProductHistory(): List<Product>
-This function takes noting as a parameter and returns a List of Product Object, which it gets from the Local history.
-### fun clearProductHistory()
-This function clears the complete Product History.
+## FoodScannerViewModel (Recommended)
 
-## Product
-The getProductFromBarcode() function returns a Product Object. In the Following you will learn how to get the data from that product.
+### Setup
 
-Product has the following attributes: 
+Instantiate the ViewModel with a `Controller`:
 
-`name: String?` `brands: String?` `allergens: List<String>?` `labels: List<String>?` `categories: List<String>?` `nutriScore: String?` `nutriments: Nutriments?` `ingredients: List<Ingredient>?` `imageUrl: String?` `code: String?` `date: String?`
+```kotlin
+val viewModel = FoodScannerViewModel(
+    controller = Controller(
+        productHistory = ProductHistory(
+            storage = LocalStorage(context = applicationContext)
+        )
+    )
+)
+```
 
-You can get these values by calling the equivalent get Function: 
+### State
 
-`getName()` `getBrands()` `getAllergens()` `getLabels()` `getCategories()` `getNutriScore()` `getNutriments()` `getIngredients()` `getImageUrl()` `getCode()` `getDate()`
+The ViewModel exposes two read-only state flows you can collect in your UI:
 
-All of the values could be null because of missing data from the Api so pls consider this.
+| Property | Type | Description |
+|---|---|---|
+| `currentProduct` | `StateFlow<Product?>` | The most recently scanned product, or `null` |
+| `historyState` | `StateFlow<List<Product>>` | The current product history |
+
+### Methods
+
+#### `fun scanBarcode(barcode: String)`
+
+Triggers a barcode lookup asynchronously. On completion, `currentProduct` and `historyState` are updated automatically.
+
+```kotlin
+viewModel.scanBarcode("4000417025005")
+```
+
+#### `fun clearHistory()`
+
+Clears the complete product history. `historyState` is updated automatically.
+
+```kotlin
+viewModel.clearHistory()
+```
+
+---
+
+## Controller (Direct Use)
+
+If you need to use the backend outside of a ViewModel context, you can instantiate and use the `Controller` directly.
+
+### Setup
+
+```kotlin
+private var controller = Controller(
+    productHistory = ProductHistory(
+        storage = LocalStorage(context = applicationContext)
+    )
+)
+```
+
+> **Note:** This setup may change in future versions.
+
+### Methods
+
+#### `fun getProductFromBarcode(barcode: String): Product?`
+
+Takes a barcode string as a parameter and returns a `Product` object, or `null` if not found.
+
+#### `fun getProductHistory(): List<Product>`
+
+Returns a list of previously scanned `Product` objects from local history.
+
+#### `fun clearProductHistory()`
+
+Clears the complete product history.
+
+> **Note:** More methods will be added in the future.
+
+---
+
+## Data Classes
+
+### Product
+
+`getProductFromBarcode()` and `getProductHistory()` return `Product` objects. All values may be `null` due to missing data from the API.
+
+| Getter | Return Type |
+|---|---|
+| `getName()` | `String?` |
+| `getBrands()` | `String?` |
+| `getAllergens()` | `List<String>?` |
+| `getLabels()` | `List<String>?` |
+| `getCategories()` | `List<String>?` |
+| `getNutriScore()` | `String?` |
+| `getNutriments()` | `Nutriments?` |
+| `getIngredients()` | `List<Ingredient>?` |
+| `getImageUrl()` | `String?` |
+| `getCode()` | `String?` |
+| `getDate()` | `String?` |
 
 ### Nutriments
-If you call the getNutriments() function you get a Nutriments Object. 
 
-Nutriments has the following attributes(all per 100g): 
+Returned by `getNutriments()`. All values are per 100g and may be `null`.
 
-`energyKcals: Double?` `fat: Double?` `saturatedFat: Double?` `carbohydrates: Double?` `sugars: Double?` `proteins: Double?` `salt: Double?` `fiber: Double?`
-
-You can get these values by calling the equivalent get Function: 
-
-`getEnergyKcals()` `getFat()` `getSaturatedFat()` `getCarbohydrates()` `getSugars()` `getProteins()` `getSalt()` `getFiber()`
-
-All of the values could be null because of missing data from the Api so pls consider this.
+| Getter | Return Type |
+|---|---|
+| `getEnergyKcals()` | `Double?` |
+| `getFat()` | `Double?` |
+| `getSaturatedFat()` | `Double?` |
+| `getCarbohydrates()` | `Double?` |
+| `getSugars()` | `Double?` |
+| `getProteins()` | `Double?` |
+| `getSalt()` | `Double?` |
+| `getFiber()` | `Double?` |
 
 ### Ingredient
-If you call the getIngredients() function you get a List of Ingriedent Objects.
 
-Ingredient has the following attributes:
+`getIngredients()` returns a `List<Ingredient>`. All values may be `null`.
 
-`name: String?` `percent: Double?` `vegan: String?` `vegetarian: String?` `subIngredients: List<Ingredient>`
+| Getter | Return Type |
+|---|---|
+| `getName()` | `String?` |
+| `getPercent()` | `Double?` |
+| `getVegan()` | `String?` |
+| `getVegetarian()` | `String?` |
+| `getSubIngredients()` | `List<Ingredient>` |
 
-You can get these values by calling the equivalent get Function:
-
-`getName()` `getPercent()` `getVegan()` `getVegetarian()` `getSubIngredients()`
-
-All of the values could be null because of missing data from the Api so pls consider this.
-
-Note: The Ingredient class could be remade in the future.
+> **Note:** The `Ingredient` class may be revised in a future version.
