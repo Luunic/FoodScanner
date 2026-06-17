@@ -1,6 +1,5 @@
 package com.foodscanner.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -13,7 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodscanner.FoodScannerViewModel
 import com.foodscanner.ui.components.CreateScanButton
 import com.foodscanner.ui.components.GreetingText
 import com.foodscanner.ui.components.VitalScanFooter
