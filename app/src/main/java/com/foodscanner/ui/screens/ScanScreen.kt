@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodscanner.ui.components.CreateScanButton
 import com.foodscanner.ui.components.GreetingText
+import com.foodscanner.ui.components.LastScanned
 import com.foodscanner.ui.components.VitalScanFooter
 import com.foodscanner.ui.components.VitalScanHeader
 import com.foodscanner.ui.theme.FoodScannerTheme
@@ -47,6 +48,7 @@ fun ScanScreen(onScanRequested: () -> Unit) {
             onHistoryClick = {},
             onFavoritesClick = {},
         )
+        LastScanned()
     }
 }
 

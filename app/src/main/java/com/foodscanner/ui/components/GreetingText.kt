@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.sp
+import com.foodscanner.R
 
 // Creates Text above Button
 @Composable
@@ -19,13 +21,13 @@ fun GreetingText (
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text (
-            text = "Hello, $username",
+            text = stringResource(R.string.greeting_name, username),
             color = Color(0xFF407E7D),
             fontWeight = Bold,
             fontSize = 48.sp
         )
         Text (
-            text = "Ready to check your ingredients today?",
+            text = stringResource(R.string.ready_to_check),
             color = Color(0xFF3f4948).copy(alpha = 0.8f),
             fontSize = 20.sp
         )

@@ -1,5 +1,6 @@
 package com.foodscanner.ui.components
 
+import android.R.attr.contentDescription
 import android.content.Context
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,9 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
+import com.foodscanner.R
 
 // Creates Scan Button
 @Composable
@@ -78,15 +85,18 @@ fun CreateScanButton (
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-//                Icon(
-//                    imageVector = Icons.Default.CenterFocusStrong,
-//                    contentDescription = "Scan",
-//                    modifier = Modifier.size(58.dp)
-//                )
+                Icon(painter = painterResource(R.drawable.center_focus_weak_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
+                    contentDescription = "Scan",
+                    modifier = Modifier.size(58.dp)
+              )
                 Text(
-                    text = "TAP TO SCAN",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(14.dp)
+                    text = stringResource(R.string.tap_to_scan),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp)
+                        .width(140.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp
                 )
             }
         }

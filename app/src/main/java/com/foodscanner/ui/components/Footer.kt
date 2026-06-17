@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
@@ -77,7 +78,7 @@ fun VitalScanFooter(
                     tint = Color(0xFF707675)
                 )
                 Text(
-                    text = "Scan",
+                    text = stringResource(R.string.scan),
                     fontSize = 14.sp,
                     color = Color(0xFF707675)
                 )
@@ -94,7 +95,7 @@ fun VitalScanFooter(
                     tint = Color(0xFF707675)
                 )
                 Text(
-                    text = "Product",
+                    text = stringResource(R.string.product),
                     fontSize = 14.sp,
                     color = Color(0xFF707675)
                 )
@@ -111,7 +112,7 @@ fun VitalScanFooter(
                     tint = Color(0xFF707675)
                 )
                 Text(
-                    text = "History",
+                    text = stringResource(R.string.history),
                     fontSize = 14.sp,
                     color = Color(0xFF707675)
                 )
@@ -130,7 +131,7 @@ fun VitalScanFooter(
                     tint = Color(0xFF707675)
                 )
                 Text(
-                    text = "Favorites",
+                    text = stringResource(R.string.favorites),
                     fontSize = 14.sp,
                     color = Color(0xFF707675)
                 )
