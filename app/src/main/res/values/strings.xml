@@ -7,4 +7,5 @@
     <string name="favorites">Favorites</string>
     <string name="greeting_name">Hello, %1$s</string>
     <string name="ready_to_check">Ready to check your ingredients today?</string>
+    <string name="last_scanned">LAST SCANNED</string>
 </resources>

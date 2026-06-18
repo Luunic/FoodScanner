@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodscanner.ui.components.CreateScanButton
 import com.foodscanner.ui.components.GreetingText
-import com.foodscanner.ui.components.LastScanned
+import com.foodscanner.ui.components.LastScannedBox
 import com.foodscanner.ui.components.VitalScanFooter
 import com.foodscanner.ui.components.VitalScanHeader
 import com.foodscanner.ui.theme.FoodScannerTheme
@@ -29,7 +29,7 @@ fun ScanScreen(onScanRequested: () -> Unit) {
     ) {
         CreateScanButton(modifier = Modifier
             .align(Alignment.Center)
-            .offset( y = screenHeight * -0.04f),
+            .offset(y = screenHeight * -0.05f),
             onScanRequested,
         )
         GreetingText(
@@ -37,6 +37,15 @@ fun ScanScreen(onScanRequested: () -> Unit) {
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = screenHeight * 0.16f)
+        )
+        LastScannedBox(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(top = screenHeight * 0.51f),
+            productName = "Prinzenrolle",
+            onClick = {
+                // Navigate to Product Screen with last scanned product
+            },
         )
         VitalScanHeader (
             modifier = Modifier.align(Alignment.TopCenter)
@@ -48,9 +57,9 @@ fun ScanScreen(onScanRequested: () -> Unit) {
             onHistoryClick = {},
             onFavoritesClick = {},
         )
-        LastScanned()
     }
 }
+
 
 @Preview
 @Composable

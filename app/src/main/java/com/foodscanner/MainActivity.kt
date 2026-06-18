@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 Color.Transparent.toArgb()
             ),
             navigationBarStyle = SystemBarStyle.light(
-                Color(0xFFFFFFFF).toArgb(),   // Deine gewünschte Farbe
+                Color(0xFFFFFFFF).toArgb(),
                 Color(0xFFFFFFFF).toArgb()
             )
         )

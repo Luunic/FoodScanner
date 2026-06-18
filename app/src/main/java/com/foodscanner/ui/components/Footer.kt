@@ -41,21 +41,17 @@ fun VitalScanFooter(
         modifier = modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .height(84.dp) // entspricht h-16 (16 * 4px = 64px)
-            // 1. Shadow-Effekt: Custom Schatten passend zum HTML (rgba(36,101,101, 0.08))
+            .height(84.dp)
             .customShadow(
                 color = Color(70, 101, 101, (255 * 0.22f).toInt()),
                 blurRadius = 20.dp,
                 offsetY = -8.dp
             )
-            // 2. Backdrop Blur: Weichzeichnen des darunterliegenden Inhalts
             .blur(
-                // Wenn wir in der Preview sind, nutzen wir 0.dp (kein Blur),
-                // auf dem echten Gerät die gewünschten 46.dp
+                // No Local Blur
                 if (LocalInspectionMode.current) 0.dp else 46.dp
             )
             .background(Color.White.copy(alpha = 0.98f))
-            // 5. Padding: Innenabstand links und rechts (px-5 -> 5 * 4px = 20px / dp)
             .padding(horizontal = 20.dp),
         contentAlignment = Alignment.Center,
     ) {

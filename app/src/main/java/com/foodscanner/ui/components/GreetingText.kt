@@ -29,7 +29,7 @@ fun GreetingText (
         Text (
             text = stringResource(R.string.ready_to_check),
             color = Color(0xFF3f4948).copy(alpha = 0.8f),
-            fontSize = 20.sp
+            fontSize = 18.sp
         )
     }
 }
