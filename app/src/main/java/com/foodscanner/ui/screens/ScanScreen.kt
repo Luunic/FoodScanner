@@ -12,11 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodscanner.ui.components.CreateScanButton
-import com.foodscanner.ui.components.GreetingText
-import com.foodscanner.ui.components.LastScannedBox
-import com.foodscanner.ui.components.VitalScanFooter
-import com.foodscanner.ui.components.VitalScanHeader
+import com.foodscanner.ui.components.scanscreen.CreateScanButton
+import com.foodscanner.ui.components.scanscreen.GreetingText
+import com.foodscanner.ui.components.scanscreen.LastScannedBox
+import com.foodscanner.ui.components.utility.VitalScanFooter
+import com.foodscanner.ui.components.utility.VitalScanHeader
 import com.foodscanner.ui.theme.FoodScannerTheme
 
 

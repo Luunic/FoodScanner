@@ -1,7 +1,5 @@
-package com.foodscanner.ui.components
+package com.foodscanner.ui.components.scanscreen
 
-import android.R.attr.contentDescription
-import android.content.Context
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

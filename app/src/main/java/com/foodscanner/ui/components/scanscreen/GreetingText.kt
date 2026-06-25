@@ -1,4 +1,4 @@
-package com.foodscanner.ui.components
+package com.foodscanner.ui.components.scanscreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

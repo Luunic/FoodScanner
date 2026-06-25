@@ -1,5 +1,6 @@
-package com.foodscanner.ui.components
+package com.foodscanner.ui.components.utility
 
+import android.graphics.BlurMaskFilter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -9,7 +10,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-// Calculates Custom Shadow
+
 fun Modifier.customShadow(
     color: Color,
     blurRadius: Dp = 0.dp,
@@ -20,9 +21,9 @@ fun Modifier.customShadow(
         val paint = Paint()
         val frameworkPaint = paint.asFrameworkPaint()
         if (blurRadius > 0.dp) {
-            frameworkPaint.maskFilter = android.graphics.BlurMaskFilter(
+            frameworkPaint.maskFilter = BlurMaskFilter(
                 blurRadius.toPx(),
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+                BlurMaskFilter.Blur.NORMAL
             )
         }
         frameworkPaint.color = color.toArgb()
