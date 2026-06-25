@@ -5,6 +5,7 @@ import com.foodscanner.data.Product
 import com.foodscanner.service.OpenFoodFactsApi
 import com.foodscanner.storage.ProductHistory
 import com.foodscanner.service.ProductParser
+import com.foodscanner.storage.Favorites
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,12 +18,16 @@ import java.util.Date
 import java.util.Locale
 
 class Controller(
-    private val productHistory: ProductHistory
+    private val productHistory: ProductHistory,
+    private val favorites: Favorites,
 ) {
     val TAG = "Controller"
 
     private val _historyFlow = MutableStateFlow<List<Product>>(productHistory.getHistory())
     val historyFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
+
+    private val _favoriteFlow = MutableStateFlow<List<Product>>(favorites.getFavorites())
+    val favoriteFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
 
     private suspend fun getDataFromApi(barcode: String): JsonElement? {
         // Call the Api
@@ -67,4 +72,17 @@ class Controller(
         _historyFlow.value = emptyList() // update
         return bool
     }
+
+    fun getFavorites(): List<Product> {
+        return favorites.getFavorites()
+    }
+    fun clearFavorites(): Boolean {
+        val bool = favorites.clearFavorites()
+        _historyFlow.value = emptyList()
+        return bool
+    }
+//    fun addFavorite(product: Product) {
+//        favorites.addProduct(product)
+//    }
+
 }

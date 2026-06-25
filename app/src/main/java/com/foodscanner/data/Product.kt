@@ -1,5 +1,7 @@
 package com.foodscanner.data
 
+import kotlin.math.roundToInt
+
 data class Product(
     private val name: String?,
     private val brands: String?,
@@ -47,4 +49,58 @@ data class Product(
     fun getDate(): String? {
         return date
     }
+
+    fun calculateHealthScore(): Int {
+        val scoresToAverage = mutableListOf<Double>()
+
+
+        nutriments?.let { n ->
+            var nutrientPoints = 100.0
+
+            val energy = n.getEnergyKcals() ?: 0.0
+            val sugar = n.getSugars() ?: 0.0
+            val satFat = n.getSaturatedFat() ?: 0.0
+            val salt = n.getSalt() ?: 0.0
+
+
+            nutrientPoints -= (energy.coerceIn(0.0, 600.0) / 600.0) * 15.0
+            nutrientPoints -= (sugar.coerceIn(0.0, 45.0) / 45.0) * 30.0
+            nutrientPoints -= (satFat.coerceIn(0.0, 20.0) / 20.0) * 20.0
+            nutrientPoints -= (salt.coerceIn(0.0, 3.0) / 3.0) * 20.0
+
+
+            val fiber = n.getFiber() ?: 0.0
+            val protein = n.getProteins() ?: 0.0
+
+            nutrientPoints += (fiber.coerceIn(0.0, 8.0) / 8.0) * 12.0
+            nutrientPoints += (protein.coerceIn(0.0, 15.0) / 15.0) * 8.0
+
+            scoresToAverage.add(nutrientPoints.coerceIn(0.0, 100.0))
+        }
+
+
+        nutriScore?.lowercase()?.trim()?.let { ns ->
+            val nsScore = when (ns) {
+                "a" -> 100.0
+                "b" -> 80.0
+                "c" -> 55.0
+                "d" -> 30.0
+                "e" -> 5.0
+                else -> null
+            }
+            nsScore?.let { scoresToAverage.add(it) }
+        }
+
+
+        if (scoresToAverage.isEmpty()) {
+            return 50
+        }
+
+
+        return scoresToAverage
+            .average()
+            .roundToInt()
+            .coerceIn(0, 100)
+    }
+
 }
