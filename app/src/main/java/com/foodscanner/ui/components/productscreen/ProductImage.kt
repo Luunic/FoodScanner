@@ -12,14 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
 
 @Composable
 fun ProductImage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageUrl: String?
 ) {
     Card(
         modifier = modifier
@@ -35,8 +39,13 @@ fun ProductImage(
             containerColor = Color.White
         )
     ) {
-        Image(
-            painter = painterResource(R.drawable.produc_placeholder),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            placeholder = painterResource(R.drawable.product_placeholder),
+            error = painterResource(R.drawable.product_placeholder),
             contentDescription = "Product Image",
             modifier = Modifier
                 .fillMaxSize()

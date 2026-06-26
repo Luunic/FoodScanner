@@ -85,7 +85,8 @@ fun CreateScanButton (
             ) {
                 Icon(painter = painterResource(R.drawable.center_focus_weak_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
                     contentDescription = "Scan",
-                    modifier = Modifier.size(58.dp)
+                    modifier = Modifier.size(58.dp),
+                    tint = Color.White
               )
                 Text(
                     text = stringResource(R.string.tap_to_scan),
@@ -94,7 +95,8 @@ fun CreateScanButton (
                         .padding(14.dp)
                         .width(140.dp),
                     textAlign = TextAlign.Center,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    color = Color.White
                 )
             }
         }

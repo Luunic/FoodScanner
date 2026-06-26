@@ -9,4 +9,15 @@
     <string name="ready_to_check">Ready to check your ingredients today?</string>
     <string name="last_scanned">LAST SCANNED</string>
     <string name="health_score">HEALTH SCORE</string>
+    <string name="macros">MACRONUTRIENTS</string>
+    <string name="carbs">Carbs</string>
+    <string name="protein">Protein</string>
+    <string name="fat">Fat</string>
+    <string name="nutrients">NUTRIENTS</string>
+    <string name="fiber">Fiber</string>
+    <string name="salt">Salt</string>
+    <string name="sugar">Sugar</string>
+    <string name="allergen_alert">ALLERGEN ALERT</string>
+    <string name="ingredients">FULL INGREDIENTS</string>
+
 </resources>

@@ -9,4 +9,14 @@
     <string name="ready_to_check">Bereit, deine Inhaltsstoffe zu checken?</string>
     <string name="last_scanned">ZULETZT GESCANNED</string>
     <string name="health_score">GESUNDHEITSWERT</string>
+    <string name="macros">MAKROWERTE</string>
+    <string name="carbs">Kohlenhydrate</string>
+    <string name="protein">Proteine</string>
+    <string name="fat">Fette</string>
+    <string name="nutrients">NÄHRSTOFFE</string>
+    <string name="fiber">BALASTSTOFFE</string>
+    <string name="salt">SALZ</string>
+    <string name="sugar">ZUCKER</string>
+    <string name="allergen_alert">VORSICHT ALLERGENE</string>
+    <string name="ingredients">ALLE INHALTSSTOFFE</string>
 </resources>
