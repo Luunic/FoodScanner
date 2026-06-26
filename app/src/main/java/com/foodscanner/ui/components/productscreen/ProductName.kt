@@ -26,14 +26,14 @@ import com.foodscanner.ui.components.utility.customShadow
 @Composable
 fun ProductName(
     modifier: Modifier = Modifier,
-    productName: String
+    productName: String?
 ){
     Row (
         modifier = modifier
             .fillMaxWidth()
     ) {
         Text(
-            text = productName,
+            text = "$productName",
             modifier = Modifier.weight(1f),
             fontSize = 36.sp,
             fontWeight = FontWeight.ExtraBold,

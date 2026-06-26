@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             FoodScannerTheme {
-                StartApp(this, viewModel)
+                StartApp(this, viewModel, controller)
             }
         }
     }

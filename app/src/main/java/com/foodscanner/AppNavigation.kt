@@ -1,21 +1,23 @@
 package com.foodscanner
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.foodscanner.data.Product
 import com.foodscanner.service.startBarcodeScanner
 import com.foodscanner.ui.screens.FavoriteScreen
 import com.foodscanner.ui.screens.HistoryScreen
 import com.foodscanner.ui.screens.ProductScreen
 import com.foodscanner.ui.screens.ScanScreen
+
 
 //@Composable
 //fun StartApp(
@@ -46,18 +48,32 @@ private sealed class AppRoute(val route: String) {
 @Composable
 fun StartApp(
     context: Context,
-    viewModel: FoodScannerViewModel
+    viewModel: FoodScannerViewModel,
+    controller: Controller
 ) {
     val navController = rememberNavController()
     val currentProduct by viewModel.currentProduct.collectAsState()
 
+    // mock Product for testing when scanner doesnt work
+    var mockProduct: Product? = null
+
     LaunchedEffect(currentProduct) {
+
+        mockProduct = controller.getProductFromBarcode("4001518117316")!!
+
         if (currentProduct != null) {
             navController.navigate(AppRoute.Product.route) {
                 launchSingleTop = true
             }
         }
     }
+
+    val TAG = "AppNavigation"
+
+    // For testing with mock Json:
+//    val inputStream = context.assets.open("MockProduct.json")
+//    val mockJsonString: String = inputStream?.bufferedReader().use { it?.readText() as String }
+//    val mockJsonElement = Json.parseToJsonElement(mockJsonString)
 
 
     //todo: change animation direction
@@ -118,7 +134,6 @@ fun StartApp(
         composable(AppRoute.Product.route) {
             ProductScreen(
                 onScanClick = {
-                    viewModel.clearCurrentProduct()
 
                     navController.navigate(AppRoute.Scan.route) {
                         launchSingleTop = true
@@ -138,15 +153,16 @@ fun StartApp(
                     navController.navigate(AppRoute.Favorit.route) {
                         launchSingleTop = true
                     }
-                }
+                },
 
+                currentProduct = currentProduct,
+                //currentProduct = mockProduct
             )
         }
 
         composable(AppRoute.History.route) {
             HistoryScreen(
                 onScanClick = {
-                    viewModel.clearCurrentProduct()
 
                     navController.navigate(AppRoute.Scan.route) {
                         launchSingleTop = true
@@ -174,7 +190,6 @@ fun StartApp(
         composable(AppRoute.Favorit.route) {
             FavoriteScreen(
                 onScanClick = {
-                    viewModel.clearCurrentProduct()
 
                     navController.navigate(AppRoute.Scan.route) {
                         launchSingleTop = true

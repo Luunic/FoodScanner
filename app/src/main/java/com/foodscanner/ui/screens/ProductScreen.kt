@@ -8,19 +8,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foodscanner.data.Product
 import com.foodscanner.ui.components.productscreen.HealthScoreCard
 import com.foodscanner.ui.components.productscreen.ProductImage
 import com.foodscanner.ui.components.productscreen.ProductName
 import com.foodscanner.ui.components.utility.VitalScanFooter
 import com.foodscanner.ui.components.utility.VitalScanHeader
-import com.foodscanner.ui.theme.FoodScannerTheme
 import com.foodscanner.ui.components.productscreen.AllergenAlert
 import com.foodscanner.ui.components.productscreen.IngredientList
 import com.foodscanner.ui.components.productscreen.NutrimentCircles
@@ -30,7 +27,8 @@ fun ProductScreen(
     onScanClick: () -> Unit,
     onProductClick: () -> Unit,
     onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit
+    onFavoritesClick: () -> Unit,
+    currentProduct: Product?
 ) {
     Box (
         modifier = Modifier.fillMaxSize()
@@ -58,12 +56,12 @@ fun ProductScreen(
             }
             item {
                 ProductName(
-                    productName = "Harvest Morning Granola"
+                    productName = currentProduct?.getName()
                 )
             }
             item {
                 HealthScoreCard(
-                    healthscorevalue = 90,
+                    healthscorevalue = currentProduct?.calculateHealthScore(),
                     choicerating = "Excellent Choice"
                 )
             }
@@ -118,20 +116,22 @@ fun ProductScreen(
 
 
 
-@Preview
-@Composable
-fun ProductScreenPreview() {
-    FoodScannerTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color(0xFFF9F9F9)
-        ){
-            ProductScreen(
-                onScanClick = {},
-                onProductClick = {},
-                onHistoryClick = {},
-                onFavoritesClick = {},
-            )
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun ProductScreenPreview() {
+//    FoodScannerTheme() {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = Color(0xFFF9F9F9)
+//        ){
+//            ProductScreen(
+//                onScanClick = {},
+//                onProductClick = {},
+//                onHistoryClick = {},
+//                onFavoritesClick = {},
+//                currentProduct = Product()
+//            )
+//        }
+//    }
+//}
+

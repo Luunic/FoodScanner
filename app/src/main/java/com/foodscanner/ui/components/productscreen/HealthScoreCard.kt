@@ -32,10 +32,11 @@ import com.foodscanner.ui.components.utility.customShadow
 @Composable
 fun HealthScoreCard(
     modifier: Modifier = Modifier,
-    healthscorevalue: Int,
+    healthscorevalue: Int?,
     choicerating: String
 ) {
-    var healthscorevaluefraction = healthscorevalue / 100f
+    var healthscorevaluefractionTemp: Float? = healthscorevalue?.div(100f)
+    var healthscorevaluefraction: Float = healthscorevaluefractionTemp ?: 0.0f
 
     Card(
         modifier = modifier
@@ -135,6 +136,7 @@ fun HealthScoreCard(
                         shape = CircleShape
                     )
             ) {
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(healthscorevaluefraction)
