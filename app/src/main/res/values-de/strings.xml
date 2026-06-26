@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodScanner</string>
+    <string name="app_name">VitalScan</string>
     <string name="tap_to_scan">"DRÜCKE    ZUM&#10;SCANNEN"</string>
     <string name="scan">Scan</string>
     <string name="product">Produkt</string>

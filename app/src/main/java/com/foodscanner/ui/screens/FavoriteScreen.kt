@@ -14,7 +14,12 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 
 @Composable
-fun FavoriteScreen() {
+fun FavoriteScreen(
+    onScanClick: () -> Unit,
+    onProductClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+    onFavoritesClick: () -> Unit
+) {
     Box (
         modifier = Modifier.fillMaxSize()
     ) {
@@ -26,24 +31,24 @@ fun FavoriteScreen() {
         )
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {},
-            onProductClick = {},
-            onHistoryClick = {},
-            onFavoritesClick = {},
+            onScanClick = {onScanClick()},
+            onProductClick = {onProductClick()},
+            onHistoryClick = {onHistoryClick()},
+            onFavoritesClick = {onFavoritesClick()}
         )
     }
 }
 
 
-@Preview
-@Composable
-fun FavoriteScreenPreview() {
-    FoodScannerTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color(0xFFF9F9F9)
-        ){
-            FavoriteScreen()
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun FavoriteScreenPreview() {
+//    FoodScannerTheme() {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = Color(0xFFF9F9F9)
+//        ){
+//            FavoriteScreen()
+//        }
+//    }
+//}

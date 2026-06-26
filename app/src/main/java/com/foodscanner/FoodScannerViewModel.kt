@@ -34,4 +34,8 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
         controller.clearProductHistory()
         _historyState.value = controller.getProductHistory()
     }
+
+    fun clearCurrentProduct() {
+        _currentProduct.value = null
+    }
 }

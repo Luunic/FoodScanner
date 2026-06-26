@@ -21,7 +21,13 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 
 @Composable
-fun ScanScreen(onScanRequested: () -> Unit) {
+fun ScanScreen(
+    onScanRequested: () -> Unit,
+    onScanClick: () -> Unit,
+    onProductClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+    onFavoritesClick: () -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     Box (
@@ -52,24 +58,24 @@ fun ScanScreen(onScanRequested: () -> Unit) {
         )
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {},
-            onProductClick = {},
-            onHistoryClick = {},
-            onFavoritesClick = {},
+            onScanClick = {onScanClick()},
+            onProductClick = {onProductClick()},
+            onHistoryClick = {onHistoryClick()},
+            onFavoritesClick = {onFavoritesClick()}
         )
     }
 }
 
 
-@Preview
-@Composable
-fun ScanScreenPreview() {
-    FoodScannerTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color(0xFFF9F9F9)
-        ){
-            ScanScreen(onScanRequested = {})
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun ScanScreenPreview() {
+//    FoodScannerTheme() {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = Color(0xFFF9F9F9)
+//        ){
+//            ScanScreen(onScanRequested = {})
+//        }
+//    }
+//}

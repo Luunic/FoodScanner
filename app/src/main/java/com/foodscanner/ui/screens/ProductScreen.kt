@@ -26,7 +26,12 @@ import com.foodscanner.ui.components.productscreen.IngredientList
 import com.foodscanner.ui.components.productscreen.NutrimentCircles
 
 @Composable
-fun ProductScreen() {
+fun ProductScreen(
+    onScanClick: () -> Unit,
+    onProductClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+    onFavoritesClick: () -> Unit
+) {
     Box (
         modifier = Modifier.fillMaxSize()
     ) {
@@ -102,10 +107,10 @@ fun ProductScreen() {
         )
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {},
-            onProductClick = {},
-            onHistoryClick = {},
-            onFavoritesClick = {},
+            onScanClick = {onScanClick()},
+            onProductClick = {onProductClick()},
+            onHistoryClick = {onHistoryClick()},
+            onFavoritesClick = {onFavoritesClick()}
         )
     }
 }
@@ -121,7 +126,12 @@ fun ProductScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = Color(0xFFF9F9F9)
         ){
-            ProductScreen()
+            ProductScreen(
+                onScanClick = {},
+                onProductClick = {},
+                onHistoryClick = {},
+                onFavoritesClick = {},
+            )
         }
     }
 }
