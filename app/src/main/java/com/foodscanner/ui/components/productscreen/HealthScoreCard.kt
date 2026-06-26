@@ -32,11 +32,12 @@ import com.foodscanner.ui.components.utility.customShadow
 @Composable
 fun HealthScoreCard(
     modifier: Modifier = Modifier,
-    healthscorevalue: Int?,
-    choicerating: String
+    healthscorevalue: Int?
 ) {
-    var healthscorevaluefractionTemp: Float? = healthscorevalue?.div(100f)
-    var healthscorevaluefraction: Float = healthscorevaluefractionTemp ?: 0.0f
+
+    val healthScoreValueSafe = healthscorevalue ?: 0
+    val healthScoreValueFraction = healthScoreValueSafe / 100f
+    val rating = getHealthScoreRating(healthScoreValueSafe)
 
     Card(
         modifier = modifier
@@ -107,7 +108,7 @@ fun HealthScoreCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = choicerating,
+                    text = rating,
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
@@ -139,7 +140,7 @@ fun HealthScoreCard(
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(healthscorevaluefraction)
+                        .fillMaxWidth(healthScoreValueFraction)
                         .fillMaxHeight()
                         .background(
                             color = Color.White,
@@ -148,5 +149,23 @@ fun HealthScoreCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun getHealthScoreRating(score: Int): String {
+    val safeScore = score.coerceIn(0, 100)
+
+    return when (safeScore) {
+        in 90..100 -> stringResource(R.string.s100)
+        in 80..89 -> stringResource(R.string.s89)
+        in 70..79 -> stringResource(R.string.s79)
+        in 60..69 -> stringResource(R.string.s69)
+        in 50..59 -> stringResource(R.string.s59)
+        in 40..49 -> stringResource(R.string.s49)
+        in 30..39 -> stringResource(R.string.s39)
+        in 20..29 -> stringResource(R.string.s29)
+        in 10..19 -> stringResource(R.string.s19)
+        else -> stringResource(R.string.s9)
     }
 }

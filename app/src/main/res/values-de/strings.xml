@@ -9,6 +9,18 @@
     <string name="ready_to_check">Bereit, deine Inhaltsstoffe zu checken?</string>
     <string name="last_scanned">ZULETZT GESCANNED</string>
     <string name="health_score">GESUNDHEITSWERT</string>
+
+    <string name="s100">Ausgezeichnete Wahl</string>
+    <string name="s89">Gesunde Wahl</string>
+    <string name="s79">Gute Wahl</string>
+    <string name="s69">Ausgewogene Wahl</string>
+    <string name="s59">Mäßige Wahl</string>
+    <string name="s49">Weniger gesunde Wahl</string>
+    <string name="s39">Schlechte Wahl</string>
+    <string name="s29">Ungesunde Wahl</string>
+    <string name="s19">Sehr ungesunde Wahl</string>
+    <string name="s9">Nach Möglichkeit vermeiden</string>
+
     <string name="macros">MAKROWERTE</string>
     <string name="carbs">Kohlenhydrate</string>
     <string name="protein">Proteine</string>

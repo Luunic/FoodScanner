@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
+import com.foodscanner.data.Ingredient
 
 @Composable
 fun IngredientList(
     modifier: Modifier = Modifier,
-    ingredients: List<String>
+    ingredients: List<Ingredient>?
 ) {
     Card(
         modifier = modifier
@@ -59,8 +60,8 @@ fun IngredientList(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            ingredients.forEach { ingredient ->
-                IngredientRow(ingredient = ingredient)
+            ingredients?.forEach { ingredient ->
+                IngredientRow(ingredient = ingredient.getName())
             }
         }
 
@@ -69,7 +70,7 @@ fun IngredientList(
 
 @Composable
 fun IngredientRow(
-    ingredient: String
+    ingredient: String?
 ) {
     Row(
         modifier = Modifier
@@ -90,7 +91,7 @@ fun IngredientRow(
         Spacer(modifier = Modifier.width(10.dp))
 
         Text(
-            text = ingredient,
+            text = ingredient ?: "",
             fontSize = 14.sp,
             lineHeight = 20.sp,
             fontWeight = FontWeight.Medium,

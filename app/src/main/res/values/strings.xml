@@ -9,6 +9,19 @@
     <string name="ready_to_check">Ready to check your ingredients today?</string>
     <string name="last_scanned">LAST SCANNED</string>
     <string name="health_score">HEALTH SCORE</string>
+
+    <string name="s100">Excellent Choice</string>
+    <string name="s89">Healthy Choice</string>
+    <string name="s79">Good Choice</string>
+    <string name="s69">Balanced Choice</string>
+    <string name="s59">Moderate Choice</string>
+    <string name="s49">Less Healthy Choice</string>
+    <string name="s39">Poor Choice</string>
+    <string name="s29">Unhealthy Choice</string>
+    <string name="s19">Very Unhealthy Choice</string>
+    <string name="s9">Avoid if Possible</string>
+
+
     <string name="macros">MACRONUTRIENTS</string>
     <string name="carbs">Carbs</string>
     <string name="protein">Protein</string>

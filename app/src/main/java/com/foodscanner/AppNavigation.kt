@@ -155,8 +155,8 @@ fun StartApp(
                     }
                 },
 
-                currentProduct = currentProduct,
-                //currentProduct = mockProduct
+                //currentProduct = currentProduct,
+                currentProduct = mockProduct
             )
         }
 

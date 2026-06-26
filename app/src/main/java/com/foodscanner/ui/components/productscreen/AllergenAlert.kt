@@ -32,7 +32,7 @@ import com.foodscanner.R
 @Composable
 fun AllergenAlert(
     modifier: Modifier = Modifier,
-    allergens: List<String>
+    allergens: List<String>?
 ) {
     Card(
         modifier = modifier
@@ -84,16 +84,16 @@ fun AllergenAlert(
                 //Implement Running Text
                 //Implement Allergens based on personal preferences
 
-//                Text(
-//                    text = "Running Text",
-//                    fontSize = 14.sp,
-//                    lineHeight = 16.sp,
-//                    fontWeight = FontWeight.Medium,
-//                    color = Color(0xFF93000A)
-//                )
+                Text(
+                    text = "Mapping Fix",
+                    fontSize = 14.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF93000A)
+                )
 
 
-                allergens.forEach { allergen ->
+                allergens?.forEach { allergen ->
                     AllergenRow(allergen = allergen)
                 }
             }
