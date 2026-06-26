@@ -33,4 +33,12 @@
     <string name="allergen_alert">ALLERGEN ALERT</string>
     <string name="ingredients">FULL INGREDIENTS</string>
 
+    <string name="history_downwriting">Your recent nutritional insights</string>
+    <string name="history_search">Search history...</string>
+    <string name="rating">GRADE %1$s</string>
+    <string name="unknownp">Unknown Product</string>
+    <string name="unknownd">Unknown Date</string>
+
+
+
 </resources>

@@ -31,4 +31,11 @@
     <string name="sugar">Zucker</string>
     <string name="allergen_alert">VORSICHT ALLERGENE</string>
     <string name="ingredients">ALLE INHALTSSTOFFE</string>
+
+    <string name="history_downwriting">Deine letzten Ernährungseinblicke</string>
+    <string name="history_search">Verlauf durchsuchen...</string>
+    <string name="rating">NOTE %1$s</string>
+    <string name="unknownp">Unbekanntes Produkt</string>
+    <string name="unknownd">Unbekanntes Datum</string>
+
 </resources>

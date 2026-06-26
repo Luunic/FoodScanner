@@ -53,29 +53,36 @@ fun ScanScreen(
                 // Navigate to Product Screen with last scanned product
             },
         )
-        VitalScanHeader (
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        VitalScanFooter(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {onScanClick()},
-            onProductClick = {onProductClick()},
-            onHistoryClick = {onHistoryClick()},
-            onFavoritesClick = {onFavoritesClick()}
-        )
+
+//      Preview Header + Footer - disable when running app
+//        VitalScanHeader(
+//            modifier = Modifier.align(Alignment.TopCenter)
+//        )
+//        VitalScanFooter(
+//            modifier = Modifier.align(Alignment.BottomCenter),
+//            onScanClick = {},
+//            onProductClick = {},
+//            onHistoryClick = {},
+//            onFavoritesClick = {}
+//        )
     }
 }
 
 
-//@Preview
-//@Composable
-//fun ScanScreenPreview() {
-//    FoodScannerTheme() {
-//        Surface(
-//            modifier = Modifier.fillMaxSize(),
-//            color = Color(0xFFF9F9F9)
-//        ){
-//            ScanScreen(onScanRequested = {})
-//        }
-//    }
-//}
+@Preview
+@Composable
+fun ScanScreenPreview() {
+    FoodScannerTheme() {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(0xFFF9F9F9)
+        ){
+            ScanScreen(
+                onScanRequested = {},
+                onScanClick = {},
+                onProductClick = {},
+                onHistoryClick = {},
+                onFavoritesClick = {})
+        }
+    }
+}

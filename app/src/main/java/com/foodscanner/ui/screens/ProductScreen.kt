@@ -92,18 +92,19 @@ fun ProductScreen(
             item {
                 Spacer(modifier = Modifier.height(104.dp))
             }
-        }
 
-        VitalScanHeader (
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        VitalScanFooter(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {onScanClick()},
-            onProductClick = {onProductClick()},
-            onHistoryClick = {onHistoryClick()},
-            onFavoritesClick = {onFavoritesClick()}
-        )
+//      Preview Header + Footer - disable when running app
+//        VitalScanHeader(
+//            modifier = Modifier.align(Alignment.TopCenter)
+//        )
+//        VitalScanFooter(
+//            modifier = Modifier.align(Alignment.BottomCenter),
+//            onScanClick = {},
+//            onProductClick = {},
+//            onHistoryClick = {},
+//            onFavoritesClick = {}
+//        )
+        }
     }
 }
 
