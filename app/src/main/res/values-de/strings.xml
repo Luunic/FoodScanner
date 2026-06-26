@@ -14,9 +14,9 @@
     <string name="protein">Proteine</string>
     <string name="fat">Fette</string>
     <string name="nutrients">NÄHRSTOFFE</string>
-    <string name="fiber">BALASTSTOFFE</string>
-    <string name="salt">SALZ</string>
-    <string name="sugar">ZUCKER</string>
+    <string name="fiber">Balaststoffe</string>
+    <string name="salt">Salz</string>
+    <string name="sugar">Zucker</string>
     <string name="allergen_alert">VORSICHT ALLERGENE</string>
     <string name="ingredients">ALLE INHALTSSTOFFE</string>
 </resources>
