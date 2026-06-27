@@ -74,11 +74,13 @@ fun StartApp(
     val navController = rememberNavController()
     val currentProduct by viewModel.currentProduct.collectAsState()
     val currentHistoryState by viewModel.historyState.collectAsState()
-
+    val lastScannedProduct = currentHistoryState.firstOrNull()
     // mock Product for testing when scanner doesnt work
     var mockProduct: Product? = null
     var mockProduct2: Product? = null
     var mockhistorylist = emptyList<Product?>()
+
+
 
     LaunchedEffect(currentProduct) {
 
@@ -86,19 +88,8 @@ fun StartApp(
         mockProduct2 = controller.getProductFromBarcode("3017624010701")!!
         mockhistorylist = listOf(mockProduct,mockProduct2)
 
-        if (currentProduct != null) {
-            navController.navigate(AppRoute.Product.route) {
-                launchSingleTop = true
-            }
-        }
     }
 
-
-
-    // For testing with mock Json:
-//    val inputStream = context.assets.open("MockProduct.json")
-//    val mockJsonString: String = inputStream?.bufferedReader().use { it?.readText() as String }
-//    val mockJsonElement = Json.parseToJsonElement(mockJsonString)
 
 
 
@@ -177,8 +168,11 @@ fun StartApp(
             composable(AppRoute.Scan.route) {
                 ScanScreen(
                     onScanRequested = {
-                        viewModel.clearCurrentProduct()
+                        //viewModel.clearCurrentProduct()
                         startBarcodeScanner(context, viewModel)
+                        navController.navigate(AppRoute.Product.route) {
+                            launchSingleTop = true
+                        }
                     },
                     onScanClick = {},
                     onProductClick = {
@@ -195,7 +189,15 @@ fun StartApp(
                         navController.navigate(AppRoute.Favorit.route) {
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    onLastScannedCLick = { product ->
+                        viewModel.setCurrentProduct(product)
+
+                        navController.navigate(AppRoute.Product.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    lastScannedProduct = lastScannedProduct
                 )
             }
 
@@ -250,6 +252,13 @@ fun StartApp(
                     },
                     currentHistoryState = currentHistoryState,
                     //currentHistoryState = mockhistorylist,
+                    onHistoryProductClick = { product ->
+                        viewModel.setCurrentProduct(product)
+
+                        navController.navigate(AppRoute.Product.route) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
 
@@ -286,8 +295,6 @@ fun StartApp(
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
             onScanClick = {
-                viewModel.clearCurrentProduct()
-
                 navController.navigate(AppRoute.Scan.route) {
                     launchSingleTop = true
                 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foodscanner.data.Product
 import com.foodscanner.ui.components.scanscreen.CreateScanButton
 import com.foodscanner.ui.components.scanscreen.GreetingText
 import com.foodscanner.ui.components.scanscreen.LastScannedBox
@@ -22,12 +23,17 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 @Composable
 fun ScanScreen(
+    lastScannedProduct: Product?,
     onScanRequested: () -> Unit,
     onScanClick: () -> Unit,
     onProductClick: () -> Unit,
     onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit
+    onFavoritesClick: () -> Unit,
+    onLastScannedCLick: (Product?) -> Unit
 ) {
+
+
+    val lastScannedName = lastScannedProduct?.getName()
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     Box (
@@ -48,8 +54,11 @@ fun ScanScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = screenHeight * 0.51f),
-            productName = "Prinzenrolle",
+            productName = lastScannedName,
             onClick = {
+                if (lastScannedProduct != null) {
+                    onLastScannedCLick(lastScannedProduct)
+                }
                 // Navigate to Product Screen with last scanned product
             },
         )
@@ -82,7 +91,10 @@ fun ScanScreenPreview() {
                 onScanClick = {},
                 onProductClick = {},
                 onHistoryClick = {},
-                onFavoritesClick = {})
+                onFavoritesClick = {},
+                onLastScannedCLick = {},
+                lastScannedProduct = null
+            )
         }
     }
 }

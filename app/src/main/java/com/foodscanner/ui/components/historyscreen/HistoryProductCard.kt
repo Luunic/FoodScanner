@@ -39,7 +39,7 @@ import com.foodscanner.ui.components.utility.customShadow
 fun HistoryProductCard(
     product: Product?,
     modifier: Modifier = Modifier,
-    onCardClick: (String?) -> Unit = {}
+    onCardClick: (Product?) -> Unit = {}
 ) {
     val cardShape = RoundedCornerShape(32.dp)
     val nutriScore = product?.getNutriScore()?.uppercase() ?: "?"
@@ -56,7 +56,7 @@ fun HistoryProductCard(
             )
             .clip(cardShape)
             .clickable {
-                onCardClick(product?.getCode())
+                onCardClick(product)
             },
         colors = CardDefaults.cardColors(
             containerColor = Color.White

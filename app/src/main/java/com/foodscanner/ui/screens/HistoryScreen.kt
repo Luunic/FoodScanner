@@ -36,6 +36,7 @@ fun HistoryScreen(
     onProductClick: () -> Unit,
     onHistoryClick: () -> Unit,
     onFavoritesClick: () -> Unit,
+    onHistoryProductClick: (Product?) -> Unit
 ) {
     var searchText by remember { mutableStateOf("") }
 
@@ -75,7 +76,9 @@ fun HistoryScreen(
             items(currentHistoryState) { product ->
                 HistoryProductCard(
                     product = product,
-                    onCardClick = {}
+                    onCardClick = { clickedProduct ->
+                        onHistoryProductClick(clickedProduct)
+                    }
                 )
             }
 
@@ -119,6 +122,7 @@ fun HistoryScreenPreview() {
                 onHistoryClick = {},
                 onFavoritesClick = {},
                 currentHistoryState = emptyList(),
+                onHistoryProductClick = {}
             )
         }
     }

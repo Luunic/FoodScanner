@@ -16,7 +16,7 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
     private val _historyState = MutableStateFlow<List<Product>>(controller.getProductHistory())
     val historyState: StateFlow<List<Product>> = _historyState.asStateFlow() // read only!
 
-    private val _currentProduct = MutableStateFlow<Product?>(null)
+    private val _currentProduct = MutableStateFlow<Product?>(controller.getProductHistory().firstOrNull())
     val currentProduct: StateFlow<Product?> = _currentProduct.asStateFlow()
 
     fun scanBarcode(barcode: String) {
@@ -30,12 +30,18 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
         }
     }
 
+    fun setCurrentProduct(product: Product?) {
+        Log.d("CurrentProduct", "setCurrentProduct: ${product?.getName()}")
+        _currentProduct.value = product
+    }
+
     fun clearHistory() {
         controller.clearProductHistory()
         _historyState.value = controller.getProductHistory()
     }
 
     fun clearCurrentProduct() {
+        Log.d("CurrentProduct", "clearCurrentProduct")
         _currentProduct.value = null
     }
 }
