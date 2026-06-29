@@ -334,6 +334,11 @@ fun StartApp(
                 ProductScreen(
                     currentProduct = currentProduct,
                     //currentProduct = mockProduct
+                    onGoToScanPageClick = {
+                        navController.navigate(AppRoute.Scan.route) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
 

@@ -61,7 +61,7 @@ fun ScanScreen(
             },
         )
 
-////      Preview Header + Footer - disable when running app
+//      Preview Header + Footer - disable when running app
 //        VitalScanHeader(
 //            modifier = Modifier.align(Alignment.TopCenter)
 //        )

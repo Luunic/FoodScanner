@@ -3,12 +3,15 @@ package com.foodscanner.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +27,24 @@ import com.foodscanner.ui.components.utility.VitalScanHeader
 import com.foodscanner.ui.components.productscreen.AllergenAlert
 import com.foodscanner.ui.components.productscreen.IngredientList
 import com.foodscanner.ui.components.productscreen.NutrimentCircles
+import com.foodscanner.ui.components.scanscreen.RedirectProductText
 import com.foodscanner.ui.theme.FoodScannerTheme
 
 @Composable
 fun ProductScreen(
-    currentProduct: Product?
+    currentProduct: Product?,
+    onGoToScanPageClick:() -> Unit,
+
 ) {
     Box (
         modifier = Modifier.fillMaxSize()
     ) {
+
+        if (currentProduct == null) {
+            RedirectProductText(onButtonClick = onGoToScanPageClick)
+        }
+        else {
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
@@ -88,6 +100,7 @@ fun ProductScreen(
             item {
                 Spacer(modifier = Modifier.height(104.dp))
             }
+        }
 
 //      Preview Header + Footer - disable when running app
 //        VitalScanHeader(
@@ -116,7 +129,8 @@ fun ProductScreenPreview() {
             color = Color(0xFFF9F9F9)
         ){
             ProductScreen(
-                currentProduct = Product(null,null,null,null,null,null,null,null,null,null,null)
+                currentProduct = Product(null,null,null,null,null,null,null,null,null,null,null),
+                onGoToScanPageClick = {}
             )
         }
     }
