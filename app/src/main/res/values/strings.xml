@@ -33,6 +33,8 @@
     <string name="sugar">Sugar</string>
     <string name="allergen_alert">ALLERGEN ALERT</string>
     <string name="ingredients">FULL INGREDIENTS</string>
+    <string name="first_scan_product">Scan a product first to find out about its ingredients</string>
+    <string name="go_to_scanscreen">Go to Scan Page</string>
 
     <string name="history_downwriting">Your recent nutritional insights</string>
     <string name="history_search">Search history...</string>
@@ -44,6 +46,7 @@
     <string name="delete_history_product_message">Do you really want to remove "%1$s" from your history?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="clear_history">Clear History</string>
 
     <string name="profil">Profil</string>
     <string name="howtogreet">How should VitalScan greet you?</string>

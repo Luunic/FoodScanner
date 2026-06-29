@@ -32,12 +32,15 @@
     <string name="sugar">Zucker</string>
     <string name="allergen_alert">VORSICHT ALLERGENE</string>
     <string name="ingredients">ALLE INHALTSSTOFFE</string>
+    <string name="first_scan_product">Scanne zu erst ein Produkt um über dessen Inhaltsstoffe herauszufinden</string>
+    <string name="go_to_scanscreen">Zum Scanner</string>
 
     <string name="history_downwriting">Deine letzten Ernährungseinblicke</string>
     <string name="history_search">Verlauf durchsuchen...</string>
     <string name="rating">NOTE %1$s</string>
     <string name="unknownp">Unbekanntes Produkt</string>
     <string name="unknownd">Unbekanntes Datum</string>
+    <string name="clear_history">Verlauf löschen</string>
 
     <string name="delete_history_product_title">Produkt löschen?</string>
     <string name="delete_history_product_message">Möchtest du "%1$s" wirklich aus dem Verlauf entfernen?</string>
