@@ -80,11 +80,10 @@ fun AllergenAlert(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-
-                //Implement Running Text
                 //Implement Allergens based on personal preferences
 
                 Text(
+                    modifier = Modifier.padding(top = 6.dp, bottom = 6.dp),
                     text = "Mapping Fix",
                     fontSize = 14.sp,
                     lineHeight = 16.sp,

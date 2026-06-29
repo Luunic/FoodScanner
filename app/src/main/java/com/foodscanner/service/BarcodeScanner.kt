@@ -1,11 +1,15 @@
 package com.foodscanner.service
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.foodscanner.FoodScannerViewModel
+import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+
+//Old Google Scanner - not used anymore
 
 fun startBarcodeScanner(context: Context, viewModel: FoodScannerViewModel) {
     val options = GmsBarcodeScannerOptions.Builder()
@@ -27,9 +31,7 @@ fun startBarcodeScanner(context: Context, viewModel: FoodScannerViewModel) {
                     Toast.LENGTH_LONG
                 ).show()
             }
-            if(rawValue.isNullOrEmpty()){
-
-            } else  {
+            if (!rawValue.isNullOrEmpty()) {
                 viewModel.scanBarcode(rawValue)
             }
 

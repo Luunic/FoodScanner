@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
 fun Modifier.customShadow(
     color: Color,
     blurRadius: Dp = 0.dp,

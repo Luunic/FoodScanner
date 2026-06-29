@@ -39,6 +39,13 @@
     <string name="unknownp">Unknown Product</string>
     <string name="unknownd">Unknown Date</string>
 
-
+    <string name="profil">Profil</string>
+    <string name="howtogreet">How should VitalScan greet you?</string>
+    <string name="yourname">Your Name</string>
+    <string name="examplename">e.g. Luis</string>
+    <string name="allergens">Allergens</string>
+    <string name="chooseallergens">Choose, which allergens VitalScan should warn you about</string>
+    <string name="nodropdownselection">No Selection</string>
+    <string name="default_username">User</string>
 
 </resources>

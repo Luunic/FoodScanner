@@ -54,16 +54,16 @@ fun FavoriteScreen(
         }
 
 //      Preview Header + Footer - disable when running app
-        VitalScanHeader(
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        VitalScanFooter(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {},
-            onProductClick = {},
-            onHistoryClick = {},
-            onFavoritesClick = {}
-        )
+//        VitalScanHeader(
+//            modifier = Modifier.align(Alignment.TopCenter)
+//        )
+//        VitalScanFooter(
+//            modifier = Modifier.align(Alignment.BottomCenter),
+//            onScanClick = {},
+//            onProductClick = {},
+//            onHistoryClick = {},
+//            onFavoritesClick = {}
+//        )
     }
 }
 

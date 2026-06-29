@@ -23,7 +23,16 @@ import com.foodscanner.ui.screens.ProductScreen
 import com.foodscanner.ui.screens.ScanScreen
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
-
+import com.foodscanner.ui.screens.BarcodeScannerScreen
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.foodscanner.ui.screens.SettingsScreen
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
+import com.foodscanner.storage.UserSettingsStorage
+import kotlinx.coroutines.launch
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 
 //@Composable
 //fun StartApp(
@@ -52,6 +61,8 @@ private sealed class AppRoute(
     data object Product : AppRoute("product", 1)
     data object History : AppRoute("history", 2)
     data object Favorit : AppRoute("favorit", 3)
+    data object Scanner : AppRoute("scanner", 4)
+    data object Settings : AppRoute("settings", 5)
 }
 
 private fun getRouteIndex(route: String?): Int {
@@ -60,6 +71,8 @@ private fun getRouteIndex(route: String?): Int {
         AppRoute.Product.route -> AppRoute.Product.index
         AppRoute.History.route -> AppRoute.History.index
         AppRoute.Favorit.route -> AppRoute.Favorit.index
+        AppRoute.Scanner.route -> AppRoute.Scanner.index
+        AppRoute.Settings.route -> AppRoute.Settings.index
         else -> 0
     }
 }
@@ -72,26 +85,45 @@ fun StartApp(
 ) {
     val TAG = "AppNavigation"
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route ?: AppRoute.Scan.route
     val currentProduct by viewModel.currentProduct.collectAsState()
     val currentHistoryState by viewModel.historyState.collectAsState()
     val lastScannedProduct = currentHistoryState.firstOrNull()
+
+    //Set Username
+    val userSettingsStorage = remember { UserSettingsStorage(context) }
+    val coroutineScope = rememberCoroutineScope()
+    val savedUsername by userSettingsStorage.username.collectAsState(initial = "")
+    val displayedUsername = savedUsername.ifBlank {
+        stringResource(R.string.default_username)
+    }
+
+
+
     // mock Product for testing when scanner doesnt work
     var mockProduct: Product? = null
     var mockProduct2: Product? = null
     var mockhistorylist = emptyList<Product?>()
 
-
-
-    LaunchedEffect(currentProduct) {
-
-        mockProduct = controller.getProductFromBarcode("4001518117316")!!
-        mockProduct2 = controller.getProductFromBarcode("3017624010701")!!
-        mockhistorylist = listOf(mockProduct,mockProduct2)
-
+    LaunchedEffect(Unit) {
+        viewModel.clearCurrentProduct()
     }
 
+//    LaunchedEffect(currentProduct) {
+//
+//        mockProduct = controller.getProductFromBarcode("4001518117316")!!
+//        mockProduct2 = controller.getProductFromBarcode("3017624010701")!!
+//        mockhistorylist = listOf(mockProduct,mockProduct2)
+//
+//    }
 
-
+    fun isSettingsTransition(
+        fromRoute: String?,
+        toRoute: String?
+    ): Boolean {
+        return fromRoute == AppRoute.Settings.route || toRoute == AppRoute.Settings.route
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -100,79 +132,118 @@ fun StartApp(
             navController = navController,
             startDestination = AppRoute.Scan.route,
             modifier = Modifier.fillMaxSize(),
+
             enterTransition = {
-                val initialIndex = getRouteIndex(initialState.destination.route)
-                val targetIndex = getRouteIndex(targetState.destination.route)
+                val fromRoute = initialState.destination.route
+                val toRoute = targetState.destination.route
 
-                val direction =
-                    if (targetIndex > initialIndex) {
-                        AnimatedContentTransitionScope.SlideDirection.Left
-                    } else {
-                        AnimatedContentTransitionScope.SlideDirection.Right
-                    }
+                if (isSettingsTransition(fromRoute, toRoute)) {
+                    fadeIn(animationSpec = tween(300))
+                } else {
+                    val initialIndex = getRouteIndex(fromRoute)
+                    val targetIndex = getRouteIndex(toRoute)
 
-                slideIntoContainer(
-                    towards = direction,
-                    animationSpec = tween(500)
-                )
+                    val direction =
+                        if (targetIndex > initialIndex) {
+                            AnimatedContentTransitionScope.SlideDirection.Left
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Right
+                        }
+
+                    slideIntoContainer(
+                        towards = direction,
+                        animationSpec = tween(500)
+                    )
+                }
             },
+
             exitTransition = {
-                val initialIndex = getRouteIndex(initialState.destination.route)
-                val targetIndex = getRouteIndex(targetState.destination.route)
+                val fromRoute = initialState.destination.route
+                val toRoute = targetState.destination.route
 
-                val direction =
-                    if (targetIndex > initialIndex) {
-                        AnimatedContentTransitionScope.SlideDirection.Left
-                    } else {
-                        AnimatedContentTransitionScope.SlideDirection.Right
-                    }
+                if (isSettingsTransition(fromRoute, toRoute)) {
+                    fadeOut(animationSpec = tween(300))
+                } else {
+                    val initialIndex = getRouteIndex(fromRoute)
+                    val targetIndex = getRouteIndex(toRoute)
 
-                slideOutOfContainer(
-                    towards = direction,
-                    animationSpec = tween(500)
-                )
+                    val direction =
+                        if (targetIndex > initialIndex) {
+                            AnimatedContentTransitionScope.SlideDirection.Left
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Right
+                        }
+
+                    slideOutOfContainer(
+                        towards = direction,
+                        animationSpec = tween(500)
+                    )
+                }
             },
+
             popEnterTransition = {
-                val initialIndex = getRouteIndex(initialState.destination.route)
-                val targetIndex = getRouteIndex(targetState.destination.route)
+                val fromRoute = initialState.destination.route
+                val toRoute = targetState.destination.route
 
-                val direction =
-                    if (targetIndex > initialIndex) {
-                        AnimatedContentTransitionScope.SlideDirection.Left
-                    } else {
-                        AnimatedContentTransitionScope.SlideDirection.Right
-                    }
+                if (isSettingsTransition(fromRoute, toRoute)) {
+                    fadeIn(animationSpec = tween(300))
+                } else {
+                    val initialIndex = getRouteIndex(fromRoute)
+                    val targetIndex = getRouteIndex(toRoute)
 
-                slideIntoContainer(
-                    towards = direction,
-                    animationSpec = tween(500)
-                )
+                    val direction =
+                        if (targetIndex > initialIndex) {
+                            AnimatedContentTransitionScope.SlideDirection.Left
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Right
+                        }
+
+                    slideIntoContainer(
+                        towards = direction,
+                        animationSpec = tween(200)
+                    )
+                }
             },
+
             popExitTransition = {
-                val initialIndex = getRouteIndex(initialState.destination.route)
-                val targetIndex = getRouteIndex(targetState.destination.route)
+                val fromRoute = initialState.destination.route
+                val toRoute = targetState.destination.route
 
-                val direction =
-                    if (targetIndex > initialIndex) {
-                        AnimatedContentTransitionScope.SlideDirection.Left
-                    } else {
-                        AnimatedContentTransitionScope.SlideDirection.Right
-                    }
+                if (isSettingsTransition(fromRoute, toRoute)) {
+                    fadeOut(animationSpec = tween(300))
+                } else {
+                    val initialIndex = getRouteIndex(fromRoute)
+                    val targetIndex = getRouteIndex(toRoute)
 
-                slideOutOfContainer(
-                    towards = direction,
-                    animationSpec = tween(500)
-                )
+                    val direction =
+                        if (targetIndex > initialIndex) {
+                            AnimatedContentTransitionScope.SlideDirection.Left
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Right
+                        }
+
+                    slideOutOfContainer(
+                        towards = direction,
+                        animationSpec = tween(200)
+                    )
+                }
             }
-        ) {
+        )
+
+
+        {
+
             composable(AppRoute.Scan.route) {
                 ScanScreen(
+                    username = displayedUsername,
                     onScanRequested = {
-                        //viewModel.clearCurrentProduct()
-                        startBarcodeScanner(context, viewModel)
-                        navController.navigate(AppRoute.Product.route) {
+
+//                        startBarcodeScanner(context, viewModel)
+
+                        navController.navigate(AppRoute.Scanner.route) {
                             launchSingleTop = true
                         }
+
                     },
                     onScanClick = {},
                     onProductClick = {
@@ -209,9 +280,7 @@ fun StartApp(
                         }
                     },
                     onProductClick = {
-                        navController.navigate(AppRoute.Product.route) {
-                            launchSingleTop = true
-                        }
+
                     },
                     onHistoryClick = {
                         navController.navigate(AppRoute.History.route) {
@@ -241,9 +310,7 @@ fun StartApp(
                         }
                     },
                     onHistoryClick = {
-                        navController.navigate(AppRoute.History.route) {
-                            launchSingleTop = true
-                        }
+
                     },
                     onFavoritesClick = {
                         navController.navigate(AppRoute.Favorit.route) {
@@ -258,7 +325,11 @@ fun StartApp(
                         navController.navigate(AppRoute.Product.route) {
                             launchSingleTop = true
                         }
+                    },
+                    onClearHistoryClick = {
+                        viewModel.clearHistory()
                     }
+
                 )
             }
 
@@ -280,41 +351,92 @@ fun StartApp(
                         }
                     },
                     onFavoritesClick = {
-                        navController.navigate(AppRoute.Favorit.route) {
-                            launchSingleTop = true
+
+                    }
+                )
+            }
+
+            composable(AppRoute.Scanner.route) {
+                BarcodeScannerScreen(
+                    viewModel = viewModel,
+                    onBarcodeScanned = {
+                        navController.navigate(AppRoute.Product.route) {
+                            popUpTo(AppRoute.Scanner.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
+            }
+
+            composable(AppRoute.Settings.route) {
+                SettingsScreen(
+                    username = savedUsername,
+                    onUsernameChange = { newName ->
+                        coroutineScope.launch {
+                            userSettingsStorage.saveUsername(newName)
                         }
                     }
                 )
             }
         }
 
+
+
+
         VitalScanHeader(
-            modifier = Modifier.align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.TopCenter),
+            onSettingsClick = {
+                navController.navigate(AppRoute.Settings.route) {
+                    launchSingleTop = true
+                    restoreState = false
+                }
+            }
         )
 
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
+            currentRoute = currentRoute,
             onScanClick = {
-                navController.navigate(AppRoute.Scan.route) {
-                    launchSingleTop = true
+                if (currentRoute != AppRoute.Scan.route) {
+                    navController.navigate(AppRoute.Scan.route) {
+                        popUpTo(AppRoute.Settings.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             },
             onProductClick = {
-                navController.navigate(AppRoute.Product.route) {
-                    launchSingleTop = true
+                if (currentRoute != AppRoute.Product.route) {
+                    navController.navigate(AppRoute.Product.route) {
+                        popUpTo(AppRoute.Settings.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             },
             onHistoryClick = {
-                navController.navigate(AppRoute.History.route) {
-                    launchSingleTop = true
+                if (currentRoute != AppRoute.History.route) {
+                    navController.navigate(AppRoute.History.route) {
+                        popUpTo(AppRoute.Settings.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             },
             onFavoritesClick = {
-                navController.navigate(AppRoute.Favorit.route) {
-                    launchSingleTop = true
+                if (currentRoute != AppRoute.Favorit.route) {
+                    navController.navigate(AppRoute.Favorit.route) {
+                        popUpTo(AppRoute.Settings.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             }
         )
     }
 }
-

@@ -23,13 +23,15 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 @Composable
 fun ScanScreen(
+    username: String,
     lastScannedProduct: Product?,
     onScanRequested: () -> Unit,
     onScanClick: () -> Unit,
     onProductClick: () -> Unit,
     onHistoryClick: () -> Unit,
     onFavoritesClick: () -> Unit,
-    onLastScannedCLick: (Product?) -> Unit
+    onLastScannedCLick: (Product?) -> Unit,
+    onSettingsClick: () -> Unit = {}
 ) {
 
 
@@ -45,7 +47,7 @@ fun ScanScreen(
             onScanRequested,
         )
         GreetingText(
-            username = "Luis",
+            username = username,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = screenHeight * 0.16f)
@@ -63,7 +65,7 @@ fun ScanScreen(
             },
         )
 
-//      Preview Header + Footer - disable when running app
+////      Preview Header + Footer - disable when running app
 //        VitalScanHeader(
 //            modifier = Modifier.align(Alignment.TopCenter)
 //        )
@@ -93,6 +95,7 @@ fun ScanScreenPreview() {
                 onHistoryClick = {},
                 onFavoritesClick = {},
                 onLastScannedCLick = {},
+                username = "Luis",
                 lastScannedProduct = null
             )
         }

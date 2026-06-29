@@ -1,5 +1,7 @@
 package com.foodscanner.ui.components.productscreen
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +32,16 @@ import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
 import kotlin.math.roundToInt
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.draw.alpha
 
 @Composable
 fun NutrimentCircles(
@@ -43,6 +55,45 @@ fun NutrimentCircles(
     sugar: Double?,
 
     ) {
+    var selectedNutrientIndex by remember { mutableIntStateOf(0) }
+    var nutrientAlphaTarget by remember { mutableStateOf(1f) }
+
+    val nutrientItems = listOf(
+        NutrientDisplayItem(
+            label = stringResource(R.string.fiber),
+            value = fiber
+        ),
+        NutrientDisplayItem(
+            label = stringResource(R.string.sugar),
+            value = sugar
+        ),
+        NutrientDisplayItem(
+            label = stringResource(R.string.salt),
+            value = salt
+        )
+    )
+
+    val nutrientAlpha by animateFloatAsState(
+        targetValue = nutrientAlphaTarget,
+        animationSpec = tween(durationMillis = 350),
+        label = "nutrientAlpha"
+    )
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(10_000)
+
+            nutrientAlphaTarget = 0f
+            delay(350)
+
+            selectedNutrientIndex = (selectedNutrientIndex + 1) % nutrientItems.size
+
+            nutrientAlphaTarget = 1f
+        }
+    }
+
+    val selectedNutrient = nutrientItems[selectedNutrientIndex]
+
     Row (
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -192,7 +243,7 @@ fun NutrimentCircles(
 
                         Text(
                             text = "KCAL",
-                            fontSize = 10.sp,
+                            fontSize = 8.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp,
                             color = Color(0xFF3F4948)
@@ -330,24 +381,33 @@ fun NutrimentCircles(
 
                     }
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier
+                            .width(90.dp)
+                            .height(50.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "NaN",
-                            fontSize = 24.sp,
-                            lineHeight = 28.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF1A1C1C)
-                        )
+                        Column(
+                            modifier = Modifier.alpha(nutrientAlpha),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = selectedNutrient.value?.let { "${it.roundToInt()}g" } ?: "-",
+                                fontSize = 24.sp,
+                                lineHeight = 28.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF1A1C1C)
+                            )
 
-                        Text(
-                            text = "NaN",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.8.sp,
-                            color = Color(0xFF3F4948)
-                        )
+                            Text(
+                                text = selectedNutrient.label,
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.8.sp,
+                                color = Color(0xFF3F4948),
+                                maxLines = 1
+                            )
+                        }
                     }
                 }
 
@@ -379,3 +439,8 @@ fun NutrimentCircles(
         }
     }
 }
+
+data class NutrientDisplayItem(
+    val label: String,
+    val value: Double?
+)

@@ -25,7 +25,9 @@ import androidx.compose.runtime.setValue
 import com.foodscanner.ui.components.historyscreen.HistoryScreenHeader
 import com.foodscanner.ui.components.historyscreen.HistorySearchBar
 import androidx.compose.foundation.lazy.items
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.foodscanner.data.Product
+import com.foodscanner.ui.components.historyscreen.HistoryClearButton
 import com.foodscanner.ui.components.historyscreen.HistoryProductCard
 
 
@@ -36,7 +38,8 @@ fun HistoryScreen(
     onProductClick: () -> Unit,
     onHistoryClick: () -> Unit,
     onFavoritesClick: () -> Unit,
-    onHistoryProductClick: (Product?) -> Unit
+    onHistoryProductClick: (Product?) -> Unit,
+    onClearHistoryClick: () -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
 
@@ -82,9 +85,17 @@ fun HistoryScreen(
                 )
             }
 
-//            item{
-//                HistoryProductCardTest()
-//            }
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            item (){
+                HistoryClearButton(
+                    onClearHistoryClick = {
+                        onClearHistoryClick()
+                    }
+                )
+            }
 
             item {
                 Spacer(modifier = Modifier.height(104.dp))
@@ -122,7 +133,8 @@ fun HistoryScreenPreview() {
                 onHistoryClick = {},
                 onFavoritesClick = {},
                 currentHistoryState = emptyList(),
-                onHistoryProductClick = {}
+                onHistoryProductClick = {},
+                onClearHistoryClick = {}
             )
         }
     }
