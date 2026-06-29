@@ -55,7 +55,8 @@ data class Product(
     }
 
     fun calculateHealthScore(): Int {
-        val scoresToAverage = mutableListOf<Double>()
+        var totalScore = 0.0
+        var totalWeight = 0.0
 
         nutriments?.let { n ->
             var nutrientPoints = 100.0
@@ -76,9 +77,9 @@ data class Product(
             nutrientPoints += (fiber.coerceIn(0.0, 8.0) / 8.0) * 12.0
             nutrientPoints += (protein.coerceIn(0.0, 15.0) / 15.0) * 8.0
 
-            scoresToAverage.add(
-                nutrientPoints.coerceIn(0.0, 100.0)
-            )
+            // Gewicht für Nährwerte: 4.0
+            totalScore += nutrientPoints.coerceIn(0.0, 100.0) * 4.0
+            totalWeight += 4.0
         }
 
         nutriScore?.lowercase()?.trim()?.let { ns ->
@@ -92,7 +93,9 @@ data class Product(
             }
 
             nsScore?.let {
-                scoresToAverage.add(it)
+                // Gewicht für Nutri-Score: 4.0
+                totalScore += it * 4.0
+                totalWeight += 4.0
             }
         }
 
@@ -106,16 +109,17 @@ data class Product(
             }
 
             novaScore?.let {
-                scoresToAverage.add(it)
+                // Niedriges Gewicht für Nova-Group: 1.0
+                totalScore += it * 1.0
+                totalWeight += 1.0
             }
         }
 
-        if (scoresToAverage.isEmpty()) {
+        if (totalWeight == 0.0) {
             return 50
         }
 
-        return scoresToAverage
-            .average()
+        return (totalScore / totalWeight)
             .roundToInt()
             .coerceIn(0, 100)
     }

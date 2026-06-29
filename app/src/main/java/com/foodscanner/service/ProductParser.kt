@@ -50,16 +50,13 @@ object ProductParser {
         if (allergenString.isNullOrBlank()) {
             return emptyList()
         }
-        val list = allergenString.split(",")
-        val secondList = mutableListOf<String>()
-        for(element in list) {
 
-            val translated = allergenMap[element.trim()]
-            if(translated != null) {
-                secondList.add(translated)
-            }
-        }
-        return secondList
+        val validKeys = allergenTranslations["de"]?.keys ?: emptySet()
+        return allergenString
+            .split(",")
+            .map { it.trim() }
+            .filter { validKeys.contains(it) }
+
     }
 
     // Only works if you use "labels_tags" as an field in the api call
@@ -67,14 +64,11 @@ object ProductParser {
         if (labelsList.isNullOrEmpty()) {
             return emptyList()
         }
-        val secondList = mutableListOf<String>()
-        for(element in labelsList) {
-            val translated = labelMap[element.trim()]
-            if (translated != null) {
-                secondList.add(translated)
-            }
-        }
-        return secondList
+        val validKeys = labelTranslations["de"]?.keys ?: emptySet()
+
+        return labelsList
+            .map { it.trim() }
+            .filter { validKeys.contains(it) }
     }
 
     // Only works if you use "categories_tags"

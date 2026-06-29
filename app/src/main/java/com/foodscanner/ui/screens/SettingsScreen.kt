@@ -47,6 +47,9 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.style.TextOverflow
 import com.foodscanner.R
+import com.foodscanner.service.allergenTranslations
+import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun SettingsScreen(
@@ -55,6 +58,9 @@ fun SettingsScreen(
     modifier: Modifier = Modifier
 ) {
     var localUsername by remember { mutableStateOf(username) }
+    val currentLanguage = if(LocalLocale.current.platformLocale.language == "de") "de" else "en"
+
+    val translationMap = allergenTranslations[currentLanguage] ?: allergenTranslations["en"] ?: emptyMap()
 
     LaunchedEffect(username) {
         if (username != localUsername) {
@@ -70,35 +76,6 @@ fun SettingsScreen(
     var allergenMenuOpen by remember { mutableStateOf(false) }
     var selectedAllergens by remember { mutableStateOf(listOf<String>()) }
 
-    val allergens = listOf(
-        "Milch",
-        "Kiwi",
-        "Hähnchen",
-        "Roter Kaviar",
-        "Orange",
-        "Erdnüsse",
-        "Eier",
-        "Matsutake",
-        "Gluten",
-        "Lupine",
-        "Yamaimo",
-        "Apfel",
-        "Schwefeldioxid und Sulfite",
-        "Fisch",
-        "Keine",
-        "Weichtiere",
-        "Schalenfrüchte",
-        "Schweinefleisch",
-        "Krebstiere",
-        "Senf",
-        "Sellerie",
-        "Banane",
-        "Soja",
-        "Sesam",
-        "Gelatine",
-        "Pfirsich",
-        "Rindfleisch"
-    )
 
     Box {
         Column(
@@ -303,8 +280,11 @@ fun SettingsScreen(
                             onDismissRequest = { allergenMenuOpen = false },
                             modifier = Modifier.background(Color.White)
                         ) {
-                            allergens.forEach { allergen ->
-                                val isSelected = selectedAllergens.contains(allergen)
+                            translationMap.keys.forEach { allergenKey ->
+                                val isSelected = selectedAllergens.contains(allergenKey)
+
+                                // 4. Den übersetzten Namen für die Anzeige aus der Map holen
+                                val translatedName = translationMap[allergenKey] ?: allergenKey
 
                                 DropdownMenuItem(
                                     text = {
@@ -324,17 +304,18 @@ fun SettingsScreen(
                                             Spacer(modifier = Modifier.width(8.dp))
 
                                             Text(
-                                                text = allergen,
+                                                text = translatedName, // <--- Zeigt z.B. "Erdnüsse" oder "Peanuts" an
                                                 color = Color(0xFF1A1C1C),
                                                 fontSize = 15.sp
                                             )
                                         }
                                     },
                                     onClick = {
+                                        // In selectedAllergens wird weiterhin nur der rohe Key ("peanuts") gespeichert!
                                         selectedAllergens = if (isSelected) {
-                                            selectedAllergens - allergen
+                                            selectedAllergens - allergenKey
                                         } else {
-                                            selectedAllergens + allergen
+                                            selectedAllergens + allergenKey
                                         }
                                     }
                                 )
