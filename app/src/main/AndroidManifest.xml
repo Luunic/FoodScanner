@@ -24,7 +24,8 @@
         <activity
             android:name="com.foodscanner.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi"
             android:theme="@style/Theme.FoodScanner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

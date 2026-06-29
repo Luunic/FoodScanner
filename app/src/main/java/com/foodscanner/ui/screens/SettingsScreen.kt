@@ -171,7 +171,11 @@ fun SettingsScreen(
 
                     OutlinedTextField(
                         value = localUsername,
-                        onValueChange = { localUsername = it },
+                        onValueChange = { newName ->
+                            if (newName.length <= 9) {
+                                localUsername = newName
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         label = {

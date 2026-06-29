@@ -20,6 +20,7 @@
     <string name="s29">Unhealthy Choice</string>
     <string name="s19">Very Unhealthy Choice</string>
     <string name="s9">Avoid if Possible</string>
+    <string name="no_product_scanned">None</string>
 
 
     <string name="macros">MACRONUTRIENTS</string>

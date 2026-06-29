@@ -143,11 +143,14 @@ fun StartApp(
 //    }
 
     //checks if transition to/from settings page
-    fun isSettingsTransition(
+    fun isFadeTransition(
         fromRoute: String?,
         toRoute: String?
     ): Boolean {
-        return fromRoute == AppRoute.Settings.route || toRoute == AppRoute.Settings.route
+        return fromRoute == AppRoute.Settings.route ||
+                toRoute == AppRoute.Settings.route ||
+                fromRoute == AppRoute.Scanner.route ||
+                toRoute == AppRoute.Scanner.route
     }
 
     Box(
@@ -211,7 +214,7 @@ fun StartApp(
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
 
-                if (isSettingsTransition(fromRoute, toRoute)) {
+                if (isFadeTransition(fromRoute, toRoute)) {
                     fadeIn(animationSpec = tween(300))
                 } else {
                     val initialIndex = getRouteIndex(fromRoute)
@@ -235,7 +238,7 @@ fun StartApp(
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
 
-                if (isSettingsTransition(fromRoute, toRoute)) {
+                if (isFadeTransition(fromRoute, toRoute)) {
                     fadeOut(animationSpec = tween(300))
                 } else {
                     val initialIndex = getRouteIndex(fromRoute)
@@ -259,7 +262,7 @@ fun StartApp(
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
 
-                if (isSettingsTransition(fromRoute, toRoute)) {
+                if (isFadeTransition(fromRoute, toRoute)) {
                     fadeIn(animationSpec = tween(300))
                 } else {
                     val initialIndex = getRouteIndex(fromRoute)
@@ -283,7 +286,7 @@ fun StartApp(
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
 
-                if (isSettingsTransition(fromRoute, toRoute)) {
+                if (isFadeTransition(fromRoute, toRoute)) {
                     fadeOut(animationSpec = tween(300))
                 } else {
                     val initialIndex = getRouteIndex(fromRoute)

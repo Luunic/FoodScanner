@@ -9,6 +9,7 @@
     <string name="ready_to_check">Bereit, deine Inhaltsstoffe zu checken?</string>
     <string name="last_scanned">ZULETZT GESCANNED</string>
     <string name="health_score">GESUNDHEITSWERT</string>
+    <string name="no_product_scanned">Nichts</string>
 
     <string name="s100">Ausgezeichnete Wahl</string>
     <string name="s89">Gesunde Wahl</string>

@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foodscanner.R
 import com.foodscanner.data.Product
 import com.foodscanner.ui.components.scanscreen.CreateScanButton
 import com.foodscanner.ui.components.scanscreen.GreetingText
@@ -52,7 +54,7 @@ fun ScanScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = screenHeight * 0.51f),
-            productName = lastScannedName,
+            productName = lastScannedName ?: stringResource(R.string.no_product_scanned),
             onClick = {
                 if (lastScannedProduct != null) {
                     onLastScannedCLick(lastScannedProduct)
