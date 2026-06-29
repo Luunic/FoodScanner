@@ -28,10 +28,6 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 @Composable
 fun ProductScreen(
-    onScanClick: () -> Unit,
-    onProductClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
     currentProduct: Product?
 ) {
     Box (
@@ -120,10 +116,6 @@ fun ProductScreenPreview() {
             color = Color(0xFFF9F9F9)
         ){
             ProductScreen(
-                onScanClick = {},
-                onProductClick = {},
-                onHistoryClick = {},
-                onFavoritesClick = {},
                 currentProduct = Product(null,null,null,null,null,null,null,null,null,null,null)
             )
         }

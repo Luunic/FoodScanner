@@ -1,8 +1,6 @@
 package com.foodscanner.ui.components.historyscreen
 
-import android.R.attr.textColor
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -37,15 +33,26 @@ import coil.request.ImageRequest
 import com.foodscanner.R
 import com.foodscanner.data.Product
 import com.foodscanner.ui.components.utility.customShadow
+import androidx.compose.foundation.combinedClickable
+import com.foodscanner.ui.components.utility.rememberAppVibrator
 
 @Composable
 fun HistoryProductCard(
     product: Product?,
     modifier: Modifier = Modifier,
-    onCardClick: (Product?) -> Unit = {}
+    onCardClick: (Product?) -> Unit = {},
+    onCardLongClick: (Product?) -> Unit = {}
 ) {
     val cardShape = RoundedCornerShape(32.dp)
-    val nutriScore = product?.getNutriScore()?.uppercase() ?: "?"
+    val rawNutriScore = product?.getNutriScore()
+    val appVibrator = rememberAppVibrator()
+
+    val nutriScore = when {
+        rawNutriScore.isNullOrBlank() -> "?"
+        rawNutriScore.equals("unknown", ignoreCase = true) -> "?"
+        else -> rawNutriScore.uppercase()
+    }
+
     val gradeText = stringResource(R.string.rating, nutriScore)
 
     Card(
@@ -58,9 +65,15 @@ fun HistoryProductCard(
                 offsetY = 8.dp
             )
             .clip(cardShape)
-            .clickable {
-                onCardClick(product)
-            },
+            .combinedClickable(
+                onClick = {
+                    onCardClick(product)
+                },
+                onLongClick = {
+                    appVibrator.vibrate(delayMillis = 140)
+                    onCardLongClick(product)
+                }
+            ),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )

@@ -33,6 +33,8 @@ import com.foodscanner.storage.UserSettingsStorage
 import kotlinx.coroutines.launch
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
 
 //@Composable
 //fun StartApp(
@@ -65,6 +67,7 @@ private sealed class AppRoute(
     data object Settings : AppRoute("settings", 5)
 }
 
+ // main Nav Routes
 private fun getRouteIndex(route: String?): Int {
     return when (route) {
         AppRoute.Scan.route -> AppRoute.Scan.index
@@ -77,12 +80,33 @@ private fun getRouteIndex(route: String?): Int {
     }
 }
 
+// Swipeable Footer Routes
+private fun isSwipeableFooterRoute(route: String?): Boolean {
+    return route == AppRoute.Scan.route ||
+            route == AppRoute.Product.route ||
+            route == AppRoute.History.route ||
+            route == AppRoute.Favorit.route
+}
+
+// Footer Routes
+private fun getFooterRouteByIndex(index: Int): String {
+    return when (index) {
+        0 -> AppRoute.Scan.route
+        1 -> AppRoute.Product.route
+        2 -> AppRoute.History.route
+        3 -> AppRoute.Favorit.route
+        else -> AppRoute.Scan.route
+    }
+}
+
 @Composable
 fun StartApp(
     context: Context,
     viewModel: FoodScannerViewModel,
     controller: Controller
 ) {
+
+    //initialize Controller/Routes/Product/History/etc
     val TAG = "AppNavigation"
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -118,6 +142,7 @@ fun StartApp(
 //
 //    }
 
+    //checks if transition to/from settings page
     fun isSettingsTransition(
         fromRoute: String?,
         toRoute: String?
@@ -126,8 +151,57 @@ fun StartApp(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(currentRoute) {
+                var totalDragX = 0f
+
+                detectHorizontalDragGestures(
+                    onDragStart = {
+                        totalDragX = 0f
+                    },
+                    onHorizontalDrag = { change, dragAmount ->
+                        totalDragX += dragAmount
+                        change.consume()
+                    },
+                    onDragEnd = {
+                        if (!isSwipeableFooterRoute(currentRoute)) {
+                            return@detectHorizontalDragGestures
+                        }
+
+                        val swipeThreshold = 120f
+                        val currentIndex = getRouteIndex(currentRoute)
+
+                        when {
+                            //swipe left (1->2)
+                            totalDragX < -swipeThreshold -> {
+                                val nextIndex = (currentIndex + 1).coerceAtMost(3)
+                                val nextRoute = getFooterRouteByIndex(nextIndex)
+
+                                if (nextRoute != currentRoute) {
+                                    navController.navigate(nextRoute) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            }
+
+                            //swipe right (2->1)
+                            totalDragX > swipeThreshold -> {
+                                val previousIndex = (currentIndex - 1).coerceAtLeast(0)
+                                val previousRoute = getFooterRouteByIndex(previousIndex)
+
+                                if (previousRoute != currentRoute) {
+                                    navController.navigate(previousRoute) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                )
+            }
     ) {
+
         NavHost(
             navController = navController,
             startDestination = AppRoute.Scan.route,
@@ -245,22 +319,6 @@ fun StartApp(
                         }
 
                     },
-                    onScanClick = {},
-                    onProductClick = {
-                        navController.navigate(AppRoute.Product.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onHistoryClick = {
-                        navController.navigate(AppRoute.History.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onFavoritesClick = {
-                        navController.navigate(AppRoute.Favorit.route) {
-                            launchSingleTop = true
-                        }
-                    },
                     onLastScannedCLick = { product ->
                         viewModel.setCurrentProduct(product)
 
@@ -274,24 +332,6 @@ fun StartApp(
 
             composable(AppRoute.Product.route) {
                 ProductScreen(
-                    onScanClick = {
-                        navController.navigate(AppRoute.Scan.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onProductClick = {
-
-                    },
-                    onHistoryClick = {
-                        navController.navigate(AppRoute.History.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onFavoritesClick = {
-                        navController.navigate(AppRoute.Favorit.route) {
-                            launchSingleTop = true
-                        }
-                    },
                     currentProduct = currentProduct,
                     //currentProduct = mockProduct
                 )
@@ -299,24 +339,6 @@ fun StartApp(
 
             composable(AppRoute.History.route) {
                 HistoryScreen(
-                    onScanClick = {
-                        navController.navigate(AppRoute.Scan.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onProductClick = {
-                        navController.navigate(AppRoute.Product.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onHistoryClick = {
-
-                    },
-                    onFavoritesClick = {
-                        navController.navigate(AppRoute.Favorit.route) {
-                            launchSingleTop = true
-                        }
-                    },
                     currentHistoryState = currentHistoryState,
                     //currentHistoryState = mockhistorylist,
                     onHistoryProductClick = { product ->
@@ -328,31 +350,16 @@ fun StartApp(
                     },
                     onClearHistoryClick = {
                         viewModel.clearHistory()
-                    }
-
+                    },
+                    onDeleteHistoryProductClick = { product ->
+                        viewModel.deleteHistoryProduct(product)
+                    },
                 )
             }
 
             composable(AppRoute.Favorit.route) {
                 FavoriteScreen(
-                    onScanClick = {
-                        navController.navigate(AppRoute.Scan.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onProductClick = {
-                        navController.navigate(AppRoute.Product.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onHistoryClick = {
-                        navController.navigate(AppRoute.History.route) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onFavoritesClick = {
 
-                    }
                 )
             }
 

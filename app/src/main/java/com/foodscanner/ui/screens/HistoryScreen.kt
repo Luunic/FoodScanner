@@ -29,19 +29,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.foodscanner.data.Product
 import com.foodscanner.ui.components.historyscreen.HistoryClearButton
 import com.foodscanner.ui.components.historyscreen.HistoryProductCard
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import com.foodscanner.R
 
 
 @Composable
 fun HistoryScreen(
     currentHistoryState: List<Product?>,
-    onScanClick: () -> Unit,
-    onProductClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
     onHistoryProductClick: (Product?) -> Unit,
+    onDeleteHistoryProductClick: (Product?) -> Unit,
     onClearHistoryClick: () -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
+    var productToDelete by remember { mutableStateOf<Product?>(null) }
+
+    //filetered History for Searchbar
+    val filteredHistory = currentHistoryState.filter { product ->
+        val query = searchText.trim()
+
+        if (query.isBlank()) {
+            true
+        } else {
+            product?.getName()?.contains(query, ignoreCase = true) == true
+        }
+    }
 
     Box (
         modifier = Modifier.fillMaxSize()
@@ -76,11 +90,14 @@ fun HistoryScreen(
                 )
             }
 
-            items(currentHistoryState) { product ->
+            items(filteredHistory) { product ->
                 HistoryProductCard(
                     product = product,
                     onCardClick = { clickedProduct ->
                         onHistoryProductClick(clickedProduct)
+                    },
+                    onCardLongClick = { longClickedProduct ->
+                        productToDelete = longClickedProduct
                     }
                 )
             }
@@ -100,6 +117,49 @@ fun HistoryScreen(
             item {
                 Spacer(modifier = Modifier.height(104.dp))
             }
+        }
+
+
+        //"Really Delete" message+confirm
+        if (productToDelete != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    productToDelete = null
+                },
+                containerColor = Color.White,
+                titleContentColor = Color(0xFF1A1C1C),
+                textContentColor = Color(0xFF1A1C1C),
+                title = {
+                    Text(text = stringResource(R.string.delete_history_product_title))
+                },
+                text = {
+                    Text(
+                        text = stringResource(
+                            R.string.delete_history_product_message,
+                            productToDelete?.getName() ?: stringResource(R.string.unknownp)
+                        )
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            onDeleteHistoryProductClick(productToDelete)
+                            productToDelete = null
+                        }
+                    ) {
+                        Text(text = stringResource(R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            productToDelete = null
+                        }
+                    ) {
+                        Text(text = stringResource(R.string.cancel))
+                    }
+                }
+            )
         }
 
 //      Preview Header + Footer - disable when running app
@@ -128,13 +188,10 @@ fun HistoryScreenPreview() {
             color = Color(0xFFF9F9F9)
         ){
             HistoryScreen(
-                onScanClick = {},
-                onProductClick = {},
-                onHistoryClick = {},
-                onFavoritesClick = {},
                 currentHistoryState = emptyList(),
                 onHistoryProductClick = {},
-                onClearHistoryClick = {}
+                onClearHistoryClick = {},
+                onDeleteHistoryProductClick = {},
             )
         }
     }

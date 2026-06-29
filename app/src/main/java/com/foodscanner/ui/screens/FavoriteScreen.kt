@@ -21,10 +21,6 @@ import com.foodscanner.ui.theme.FoodScannerTheme
 
 @Composable
 fun FavoriteScreen(
-    onScanClick: () -> Unit,
-    onProductClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
 ) {
     Box (
         modifier = Modifier.fillMaxSize()
@@ -77,10 +73,6 @@ fun FavoriteScreenPreview() {
             color = Color(0xFFF9F9F9)
         ){
             FavoriteScreen(
-                onScanClick = {},
-                onProductClick = {},
-                onHistoryClick = {},
-                onFavoritesClick = {}
             )
         }
     }

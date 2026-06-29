@@ -81,6 +81,10 @@ class Controller(
         _historyFlow.value = emptyList()
         return bool
     }
+
+    fun deleteHistoryProduct(product: Product?): Boolean {
+        return productHistory.deleteProduct(product)
+    }
 //    fun addFavorite(product: Product) {
 //        favorites.addProduct(product)
 //    }

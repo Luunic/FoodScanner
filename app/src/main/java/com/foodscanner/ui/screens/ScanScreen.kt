@@ -26,10 +26,6 @@ fun ScanScreen(
     username: String,
     lastScannedProduct: Product?,
     onScanRequested: () -> Unit,
-    onScanClick: () -> Unit,
-    onProductClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
     onLastScannedCLick: (Product?) -> Unit,
     onSettingsClick: () -> Unit = {}
 ) {
@@ -90,10 +86,6 @@ fun ScanScreenPreview() {
         ){
             ScanScreen(
                 onScanRequested = {},
-                onScanClick = {},
-                onProductClick = {},
-                onHistoryClick = {},
-                onFavoritesClick = {},
                 onLastScannedCLick = {},
                 username = "Luis",
                 lastScannedProduct = null

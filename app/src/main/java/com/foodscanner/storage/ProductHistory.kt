@@ -15,7 +15,7 @@ class ProductHistory(private val storage: Storage) {
 
         // TODO Following two lines are messy and definily need to be refactored
         val barcode = product.jsonObject["product"]?.jsonObject?.get("code")?.jsonPrimitive?.content
-        history.removeIf {it.jsonObject["product"]?.jsonObject?.get("code")?.jsonPrimitive?.content == barcode}
+        history.removeIf { it.jsonObject["product"]?.jsonObject?.get("code")?.jsonPrimitive?.content == barcode }
 
         history.add(0, product)
 
@@ -39,9 +39,29 @@ class ProductHistory(private val storage: Storage) {
     fun clearHistory(): Boolean {
         var bool = true
         val history = storage.loadStorage(fileName)
-        if(history.isEmpty()) bool = false
+        if (history.isEmpty()) bool = false
         history.clear()
         storage.saveStorage(history, fileName)
         return bool
+    }
+
+    fun deleteProduct(product: Product?): Boolean {
+        val barcode = product?.getCode() ?: return false
+
+        val history = storage.loadStorage(fileName)
+
+        val removed = history.removeIf {
+            it.jsonObject["product"]
+                ?.jsonObject
+                ?.get("code")
+                ?.jsonPrimitive
+                ?.content == barcode
+        }
+
+        if (removed) {
+            storage.saveStorage(history, fileName)
+        }
+
+        return removed
     }
 }

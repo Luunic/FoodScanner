@@ -39,6 +39,11 @@
     <string name="unknownp">Unknown Product</string>
     <string name="unknownd">Unknown Date</string>
 
+    <string name="delete_history_product_title">Delete product?</string>
+    <string name="delete_history_product_message">Do you really want to remove "%1$s" from your history?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
     <string name="profil">Profil</string>
     <string name="howtogreet">How should VitalScan greet you?</string>
     <string name="yourname">Your Name</string>

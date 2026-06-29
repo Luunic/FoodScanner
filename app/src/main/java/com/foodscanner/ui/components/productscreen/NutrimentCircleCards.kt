@@ -1,6 +1,5 @@
 package com.foodscanner.ui.components.productscreen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -81,7 +80,7 @@ fun NutrimentCircles(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(10_000)
+            delay(5_000)
 
             nutrientAlphaTarget = 0f
             delay(350)
@@ -420,19 +419,19 @@ fun NutrimentCircles(
                     NutrimentLegendRow(
                         color = Color(0xFF3A7CA5),
                         label = stringResource(R.string.fiber),
-                        value = "${fiber?.roundToInt()} g"
+                        value = "${fiber?.roundToInt() ?: "-"} g"
                     )
 
                     NutrimentLegendRow(
                         color = Color(0xFF6BAED6),
                         label = stringResource(R.string.salt),
-                        value = "${salt?.roundToInt()} g"
+                        value = "${salt?.roundToInt() ?: "-"} g"
                     )
 
                     NutrimentLegendRow(
                         color = Color(0xFFA7D8F0),
                         label = stringResource(R.string.sugar),
-                        value = "${sugar?.roundToInt()} g"
+                        value = "${sugar?.roundToInt() ?: "-"} g"
                     )
                 }
             }
