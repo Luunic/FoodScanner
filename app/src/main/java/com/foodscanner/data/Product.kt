@@ -14,6 +14,7 @@ data class Product(
     private val imageUrl: String?,
     private val code: String?,
     private val date: String?,
+    private val novaGroup: Int?,
 ) {
 
     fun getName(): String? {
@@ -49,10 +50,12 @@ data class Product(
     fun getDate(): String? {
         return date
     }
+    fun getNovaGroup(): Int? {
+        return novaGroup
+    }
 
     fun calculateHealthScore(): Int {
         val scoresToAverage = mutableListOf<Double>()
-
 
         nutriments?.let { n ->
             var nutrientPoints = 100.0
@@ -62,12 +65,10 @@ data class Product(
             val satFat = n.getSaturatedFat() ?: 0.0
             val salt = n.getSalt() ?: 0.0
 
-
             nutrientPoints -= (energy.coerceIn(0.0, 600.0) / 600.0) * 15.0
             nutrientPoints -= (sugar.coerceIn(0.0, 45.0) / 45.0) * 30.0
             nutrientPoints -= (satFat.coerceIn(0.0, 20.0) / 20.0) * 20.0
             nutrientPoints -= (salt.coerceIn(0.0, 3.0) / 3.0) * 20.0
-
 
             val fiber = n.getFiber() ?: 0.0
             val protein = n.getProteins() ?: 0.0
@@ -75,9 +76,10 @@ data class Product(
             nutrientPoints += (fiber.coerceIn(0.0, 8.0) / 8.0) * 12.0
             nutrientPoints += (protein.coerceIn(0.0, 15.0) / 15.0) * 8.0
 
-            scoresToAverage.add(nutrientPoints.coerceIn(0.0, 100.0))
+            scoresToAverage.add(
+                nutrientPoints.coerceIn(0.0, 100.0)
+            )
         }
-
 
         nutriScore?.lowercase()?.trim()?.let { ns ->
             val nsScore = when (ns) {
@@ -88,14 +90,29 @@ data class Product(
                 "e" -> 5.0
                 else -> null
             }
-            nsScore?.let { scoresToAverage.add(it) }
+
+            nsScore?.let {
+                scoresToAverage.add(it)
+            }
         }
 
+        getNovaGroup()?.let { nova ->
+            val novaScore = when (nova) {
+                1 -> 100.0
+                2 -> 80.0
+                3 -> 50.0
+                4 -> 15.0
+                else -> null
+            }
+
+            novaScore?.let {
+                scoresToAverage.add(it)
+            }
+        }
 
         if (scoresToAverage.isEmpty()) {
             return 50
         }
-
 
         return scoresToAverage
             .average()

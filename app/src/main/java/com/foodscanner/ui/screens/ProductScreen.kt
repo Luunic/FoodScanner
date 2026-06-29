@@ -129,7 +129,7 @@ fun ProductScreenPreview() {
             color = Color(0xFFF9F9F9)
         ){
             ProductScreen(
-                currentProduct = Product(null,null,null,null,null,null,null,null,null,null,null),
+                currentProduct = Product(null,null,null,null,null,null,null,null,null,null,null, null),
                 onGoToScanPageClick = {}
             )
         }

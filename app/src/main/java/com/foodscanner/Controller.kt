@@ -57,6 +57,8 @@ class Controller(
 
             val parsed = ProductParser.parse(extendedData)
 
+            Log.d("Controller", "${parsed.getNovaGroup()}")
+
             productHistory.addProduct(extendedData)
             _historyFlow.value = productHistory.getHistory() // update
             return parsed

@@ -40,6 +40,7 @@ object ProductParser {
             imageUrl = product?.get("image_url")?.jsonPrimitive?.contentOrNull,
             code = product?.get("code")?.jsonPrimitive?.contentOrNull,
             date = jsonObject?.get("date")?.jsonPrimitive?.contentOrNull,
+            novaGroup = product?.get("nova_group")?.jsonPrimitive?.intOrNull
         )
     }
 

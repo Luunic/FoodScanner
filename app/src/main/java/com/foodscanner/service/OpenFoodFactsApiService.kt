@@ -25,7 +25,7 @@ interface OpenFoodFactsApiService {
     @GET("api/v2/product/{barcode}")
     suspend fun getData(
         @Path("barcode") barcode: String,
-        @Query("fields") fields: String = "product_name,brands,image_url,ingredients,ingredients_text,allergens,labels_tags,nutriments,nutriscore_grade,categories_tags,code"
+        @Query("fields") fields: String = "product_name,brands,image_url,ingredients,ingredients_text,allergens,labels_tags,nutriments,nutriscore_grade,categories_tags,code,nova_group"
     ): String
 }
 
