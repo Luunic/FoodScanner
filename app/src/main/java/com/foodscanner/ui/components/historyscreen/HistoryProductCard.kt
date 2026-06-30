@@ -55,6 +55,8 @@ fun HistoryProductCard(
 
     val gradeText = stringResource(R.string.rating, nutriScore)
 
+
+
     Card(
         shape = cardShape,
         modifier = modifier

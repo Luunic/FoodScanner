@@ -233,7 +233,7 @@ fun NutrimentCircles(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${calories?.roundToInt()}",
+                            text = "${calories?.roundToInt() ?: "-"}",
                             fontSize = 24.sp,
                             lineHeight = 28.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -259,19 +259,19 @@ fun NutrimentCircles(
                     NutrimentLegendRow(
                         color = Color(0xFF246565),
                         label = stringResource(R.string.carbs),
-                        value = "${carbs?.roundToInt()} g"
+                        value = "${carbs?.roundToInt() ?: "-"} g"
                     )
 
                     NutrimentLegendRow(
                         color = Color(0xFF4F9896),
                         label = stringResource(R.string.protein),
-                        value = "${protein?.roundToInt()} g"
+                        value = "${protein?.roundToInt() ?: "-"} g"
                     )
 
                     NutrimentLegendRow(
                         color = Color(0xFF93D2D0),
                         label = stringResource(R.string.fat),
-                        value = "${fat?.roundToInt()} g"
+                        value = "${fat?.roundToInt() ?: "-"} g"
                     )
                 }
             }

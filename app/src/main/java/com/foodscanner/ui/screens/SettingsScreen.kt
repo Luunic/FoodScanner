@@ -55,6 +55,8 @@ import androidx.compose.ui.platform.LocalLocale
 fun SettingsScreen(
     username: String,
     onUsernameChange: (String) -> Unit,
+    selectedAllergens: List<String>,
+    onAllergensChange: (List<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var localUsername by remember { mutableStateOf(username) }
@@ -74,7 +76,11 @@ fun SettingsScreen(
     }
 
     var allergenMenuOpen by remember { mutableStateOf(false) }
-    var selectedAllergens by remember { mutableStateOf(listOf<String>()) }
+    var localSelectedAllergens by remember { mutableStateOf(selectedAllergens) }
+
+    LaunchedEffect(selectedAllergens) {
+        localSelectedAllergens = selectedAllergens
+    }
 
 
     Box {
@@ -251,12 +257,14 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = if (selectedAllergens.isEmpty()) {
+                                text = if (localSelectedAllergens.isEmpty()) {
                                     stringResource(R.string.nodropdownselection)
                                 } else {
-                                    selectedAllergens.joinToString(", ")
+                                    localSelectedAllergens
+                                        .map { key -> translationMap[key] ?: key }
+                                        .joinToString(", ")
                                 },
-                                color = if (selectedAllergens.isEmpty()) {
+                                color = if (localSelectedAllergens.isEmpty()) {
                                     Color(0xFF6F7978)
                                 } else {
                                     Color(0xFF1A1C1C)
@@ -281,7 +289,7 @@ fun SettingsScreen(
                             modifier = Modifier.background(Color.White)
                         ) {
                             translationMap.keys.forEach { allergenKey ->
-                                val isSelected = selectedAllergens.contains(allergenKey)
+                                val isSelected = localSelectedAllergens.contains(allergenKey)
 
                                 // 4. Den übersetzten Namen für die Anzeige aus der Map holen
                                 val translatedName = translationMap[allergenKey] ?: allergenKey
@@ -312,11 +320,14 @@ fun SettingsScreen(
                                     },
                                     onClick = {
                                         // In selectedAllergens wird weiterhin nur der rohe Key ("peanuts") gespeichert!
-                                        selectedAllergens = if (isSelected) {
-                                            selectedAllergens - allergenKey
+                                        val newSelection = if (isSelected) {
+                                            localSelectedAllergens - allergenKey
                                         } else {
-                                            selectedAllergens + allergenKey
+                                            localSelectedAllergens + allergenKey
                                         }
+
+                                        localSelectedAllergens = newSelection
+                                        onAllergensChange(newSelection)
                                     }
                                 )
                             }
@@ -351,7 +362,9 @@ fun SettingsScreenPreview() {
         ){
             SettingsScreen(
                 username = "Luis",
-                onUsernameChange =  {}
+                onUsernameChange = {},
+                selectedAllergens = listOf("milk", "gluten"),
+                onAllergensChange = {}
             )
         }
     }

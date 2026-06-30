@@ -119,6 +119,9 @@ fun StartApp(
     val userSettingsStorage = remember { UserSettingsStorage(context) }
     val coroutineScope = rememberCoroutineScope()
     val savedUsername by userSettingsStorage.username.collectAsState(initial = "")
+    val savedAllergens by userSettingsStorage.allergens.collectAsState(
+        initial = emptyList()
+    )
     val displayedUsername = savedUsername.ifBlank {
         stringResource(R.string.default_username)
     }
@@ -336,7 +339,7 @@ fun StartApp(
             composable(AppRoute.Product.route) {
                 ProductScreen(
                     currentProduct = currentProduct,
-                    //currentProduct = mockProduct
+                    selectedAllergens = savedAllergens,
                     onGoToScanPageClick = {
                         navController.navigate(AppRoute.Scan.route) {
                             launchSingleTop = true
@@ -387,9 +390,15 @@ fun StartApp(
             composable(AppRoute.Settings.route) {
                 SettingsScreen(
                     username = savedUsername,
+                    selectedAllergens = savedAllergens,
                     onUsernameChange = { newName ->
                         coroutineScope.launch {
                             userSettingsStorage.saveUsername(newName)
+                        }
+                    },
+                    onAllergensChange = { newAllergens ->
+                        coroutineScope.launch {
+                            userSettingsStorage.saveAllergens(newAllergens)
                         }
                     }
                 )

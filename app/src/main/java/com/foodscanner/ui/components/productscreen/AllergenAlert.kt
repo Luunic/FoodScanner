@@ -80,18 +80,6 @@ fun AllergenAlert(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                //Implement Allergens based on personal preferences
-
-                Text(
-                    modifier = Modifier.padding(top = 6.dp, bottom = 6.dp),
-                    text = "Mapping Fix",
-                    fontSize = 14.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF93000A)
-                )
-
-
                 allergens?.forEach { allergen ->
                     AllergenRow(allergen = allergen)
                 }
