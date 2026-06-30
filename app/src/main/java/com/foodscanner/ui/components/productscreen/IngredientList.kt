@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,45 +27,62 @@ import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
 import com.foodscanner.data.Ingredient
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 
 @Composable
 fun IngredientList(
     modifier: Modifier = Modifier,
-    ingredients: List<Ingredient>?
+    ingredients: List<Ingredient>?,
+    visible: Boolean = true,
+    delayMillis: Int = 0
 ) {
-    Card(
+    //fly in animation
+    val anim = rememberBottomSlideAnimValues(
+        visible = visible,
+        delayMillis = delayMillis
+    )
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .customShadow(
-                color = Color(70, 101, 101, (255 * 0.22f).toInt()),
+                color = Color(70, 101, 101, (255 * anim.shadowAlpha.value).toInt()),
                 blurRadius = 20.dp,
                 offsetY = 8.dp
-            ),
-        shape = RoundedCornerShape(32.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+            )
     ) {
-        Column(
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.ingredients),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = 1.4.sp,
-                color = Color(0xFF3F4948)
+                .graphicsLayer {
+                    this.alpha = anim.alpha.value
+                    this.translationY = anim.translationY.value
+                },
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
             )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.ingredients),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 1.4.sp,
+                    color = Color(0xFF3F4948)
+                )
 
-            Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
-            ingredients?.forEach { ingredient ->
-                IngredientRow(ingredient = ingredient.getName())
+                ingredients?.forEach { ingredient ->
+                    IngredientRow(ingredient = ingredient.getName())
+                }
             }
         }
-
     }
 }
 

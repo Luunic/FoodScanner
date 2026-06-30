@@ -47,11 +47,13 @@
 
     <string name="delete_history_product_title">Produkt löschen?</string>
     <string name="delete_history_product_message">Möchtest du "%1$s" wirklich aus dem Verlauf entfernen?</string>
+    <string name="clear_history_question">Möchtest du wirklich deinen Verlauf leeren?</string>
     <string name="delete">Löschen</string>
     <string name="cancel">Abbrechen</string>
 
     <string name="delete_favorite_product_message">Möchtest du "%1$s" wirklich aus deinen Favoriten entfernen?</string>
     <string name="clear_favorites">Alle Favoriten Löschen</string>
+    <string name="clear_favorites_question">Willst du wirklich alle deine Favoriten löschen?</string>
 
     <string name="profil">Profil</string>
     <string name="howtogreet">Wie soll VitalScan dich begrüßen?</string>

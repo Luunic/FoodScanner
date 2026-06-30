@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+//text under nutrient circles
 @Composable
 fun NutrimentLegendRow(
     color: Color,

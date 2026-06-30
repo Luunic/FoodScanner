@@ -34,119 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 
-
-//@Composable
-//fun VitalScanFooter(
-//    modifier: Modifier = Modifier,
-//    currentRoute: String,
-//    onScanClick: () -> Unit,
-//    onProductClick: () -> Unit,
-//    onHistoryClick: () -> Unit,
-//    onFavoritesClick: () -> Unit
-//) {
-//    val selectedIndex = when (currentRoute) {
-//        "scan" -> 0
-//        "product" -> 1
-//        "history" -> 2
-//        "favorit" -> 3
-//        else -> 0
-//    }
-//
-//    Box(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .navigationBarsPadding()
-//            .height(84.dp)
-//            .customShadow(
-//                color = Color(70, 101, 101, (255 * 0.22f).toInt()),
-//                blurRadius = 20.dp,
-//                offsetY = -8.dp
-//            )
-//            .background(Color.White.copy(alpha = 0.98f))
-//            .padding(horizontal = 20.dp),
-//        contentAlignment = Alignment.Center,
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(84.dp),
-//            horizontalArrangement = Arrangement.SpaceEvenly,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Column(
-//                modifier = Modifier
-//                    .width(80.dp)
-//                    .clickable { onScanClick() },
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Icon(painter = painterResource(R.drawable.barcode_scanner_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(38.dp),
-//                    tint = Color(0xFF707675)
-//                )
-//                Text(
-//                    text = stringResource(R.string.scan),
-//                    fontSize = 14.sp,
-//                    color = Color(0xFF707675)
-//                )
-//            }
-//            Column(
-//                modifier = Modifier
-//                    .width(80.dp)
-//                    .clickable { onProductClick() },
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Icon(painter = painterResource(R.drawable.fastfood_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(38.dp),
-//                    tint = Color(0xFF707675)
-//                )
-//                Text(
-//                    text = stringResource(R.string.product),
-//                    fontSize = 14.sp,
-//                    color = Color(0xFF707675)
-//                )
-//            }
-//            Column(
-//                modifier = Modifier
-//                    .width(80.dp)
-//                    .clickable { onHistoryClick() },
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Icon(painter = painterResource(R.drawable.history_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(38.dp),
-//                    tint = Color(0xFF707675)
-//                )
-//                Text(
-//                    text = stringResource(R.string.history),
-//                    fontSize = 14.sp,
-//                    color = Color(0xFF707675)
-//                )
-//            }
-//            Column(
-//                modifier = Modifier
-//                    .width(80.dp)
-//                    .clickable { onFavoritesClick() },
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Icon(painter = painterResource(R.drawable.favorite_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .size(38.dp)
-//                        .offset(x = (-2).dp),
-//                    tint = Color(0xFF707675)
-//                )
-//                Text(
-//                    text = stringResource(R.string.favorites),
-//                    fontSize = 14.sp,
-//                    color = Color(0xFF707675)
-//                )
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun VitalScanFooter(
     modifier: Modifier = Modifier,
@@ -165,6 +52,8 @@ fun VitalScanFooter(
         else -> 0
     }
 
+
+    //footer layout
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
@@ -179,8 +68,8 @@ fun VitalScanFooter(
             .padding(horizontal = 20.dp),
         contentAlignment = Alignment.Center
     ) {
+        //animate green overlay for active page
         val itemWidth = maxWidth / 4
-
         val indicatorOffset by animateDpAsState(
             targetValue = itemWidth * selectedIndex,
             animationSpec = tween(durationMillis = 200),
@@ -247,6 +136,8 @@ fun VitalScanFooter(
     }
 }
 
+
+//clickable button + select state
 @Composable
 private fun FooterItem(
     modifier: Modifier = Modifier,

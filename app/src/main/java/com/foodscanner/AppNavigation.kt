@@ -33,6 +33,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.input.pointer.pointerInput
 
+//define nav routes
 private sealed class AppRoute(
     val route: String,
     val index: Int
@@ -45,7 +46,7 @@ private sealed class AppRoute(
     data object Settings : AppRoute("settings", 5)
 }
 
- // main Nav Routes
+//return nav route indexes
 private fun getRouteIndex(route: String?): Int {
     return when (route) {
         AppRoute.Scan.route -> AppRoute.Scan.index
@@ -58,7 +59,7 @@ private fun getRouteIndex(route: String?): Int {
     }
 }
 
-// Swipeable Footer Routes
+//check for swipeable
 private fun isSwipeableFooterRoute(route: String?): Boolean {
     return route == AppRoute.Scan.route ||
             route == AppRoute.Product.route ||
@@ -66,7 +67,15 @@ private fun isSwipeableFooterRoute(route: String?): Boolean {
             route == AppRoute.Favorit.route
 }
 
-// Footer Routes
+//check for fadeable
+private fun isFadeTransition(fromRoute: String?, toRoute: String?): Boolean {
+    return fromRoute == AppRoute.Settings.route ||
+            toRoute == AppRoute.Settings.route ||
+            fromRoute == AppRoute.Scanner.route ||
+            toRoute == AppRoute.Scanner.route
+}
+
+//footer index to nav route
 private fun getFooterRouteByIndex(index: Int): String {
     return when (index) {
         0 -> AppRoute.Scan.route
@@ -84,11 +93,12 @@ fun StartApp(
     controller: Controller
 ) {
 
-    //initialize Controller/Routes/Product/History/etc
+    //initialize nav controller + route
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: AppRoute.Scan.route
 
+    //product states
     val currentProduct by viewModel.currentProduct.collectAsState()
     val currentHistoryState by viewModel.historyState.collectAsState()
     val currentFavoriteState by viewModel.favoriteState.collectAsState()
@@ -109,20 +119,13 @@ fun StartApp(
         stringResource(R.string.default_username)
     }
 
-    //checks if transition to/from settings page
-    fun isFadeTransition(
-        fromRoute: String?,
-        toRoute: String?
-    ): Boolean {
-        return fromRoute == AppRoute.Settings.route ||
-                toRoute == AppRoute.Settings.route ||
-                fromRoute == AppRoute.Scanner.route ||
-                toRoute == AppRoute.Scanner.route
-    }
 
+    //nav host container
     Box(
         modifier = Modifier
             .fillMaxSize()
+
+            //drag swipe between pages
             .pointerInput(currentRoute) {
                 var totalDragX = 0f
 
@@ -177,6 +180,8 @@ fun StartApp(
             startDestination = AppRoute.Scan.route,
             modifier = Modifier.fillMaxSize(),
 
+
+            //page swipe transition
             enterTransition = {
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
@@ -201,6 +206,7 @@ fun StartApp(
                 }
             },
 
+            //page swipe transition
             exitTransition = {
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
@@ -225,6 +231,7 @@ fun StartApp(
                 }
             },
 
+            //page swipe transition
             popEnterTransition = {
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
@@ -249,6 +256,7 @@ fun StartApp(
                 }
             },
 
+            //page swipe transition
             popExitTransition = {
                 val fromRoute = initialState.destination.route
                 val toRoute = targetState.destination.route
@@ -276,7 +284,7 @@ fun StartApp(
 
 
         {
-
+            //set ScanScreen + handle I/O
             composable(AppRoute.Scan.route) {
                 ScanScreen(
                     username = displayedUsername,
@@ -300,6 +308,7 @@ fun StartApp(
                 )
             }
 
+            //set ProductScreen + handle I/O
             composable(AppRoute.Product.route) {
                 ProductScreen(
                     currentProduct = currentProduct,
@@ -316,6 +325,7 @@ fun StartApp(
                 )
             }
 
+            //set HistoryScreen + handle I/O
             composable(AppRoute.History.route) {
                 HistoryScreen(
                     currentHistoryState = currentHistoryState,
@@ -335,6 +345,7 @@ fun StartApp(
                 )
             }
 
+            //set FavoriteScreen + handle I/O
             composable(AppRoute.Favorit.route) {
                 FavoriteScreen(
                     currentHistoryState = currentFavoriteState,
@@ -355,6 +366,7 @@ fun StartApp(
                 )
             }
 
+            //set BarcodeScannerScreen + handle I/O
             composable(AppRoute.Scanner.route) {
                 BarcodeScannerScreen(
                     viewModel = viewModel,
@@ -368,6 +380,7 @@ fun StartApp(
                 )
             }
 
+            //set SettingsScreen + handle I/O
             composable(AppRoute.Settings.route) {
                 SettingsScreen(
                     username = savedUsername,
@@ -387,8 +400,7 @@ fun StartApp(
         }
 
 
-
-
+        //initialize Header
         VitalScanHeader(
             modifier = Modifier.align(Alignment.TopCenter),
             onSettingsClick = {
@@ -399,6 +411,7 @@ fun StartApp(
             }
         )
 
+        //initialize Footer + handle clicks
         VitalScanFooter(
             modifier = Modifier.align(Alignment.BottomCenter),
             currentRoute = currentRoute,

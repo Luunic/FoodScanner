@@ -1,5 +1,7 @@
 package com.foodscanner.ui.screens
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,13 +23,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.foodscanner.ui.components.historyfavoritesscreen.HistoryScreenHeader
 import com.foodscanner.ui.components.historyfavoritesscreen.HistorySearchBar
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.runtime.LaunchedEffect
 import com.foodscanner.data.Product
 import com.foodscanner.ui.components.historyfavoritesscreen.HistoryClearButton
 import com.foodscanner.ui.components.historyfavoritesscreen.HistoryProductCard
 import androidx.compose.ui.res.stringResource
 import com.foodscanner.R
 import com.foodscanner.ui.components.historyfavoritesscreen.DeleteMessage
+import com.foodscanner.ui.components.utility.SwipeDeleteAnim
+import com.foodscanner.ui.components.utility.animations.SlideInFromBottom
+import kotlinx.coroutines.delay
 
 @Composable
 fun FavoriteScreen(
@@ -36,8 +42,18 @@ fun FavoriteScreen(
     onDeleteHistoryProductClick: (Product?) -> Unit,
     onClearHistoryClick: () -> Unit,
 ) {
+    //states
     var searchText by remember { mutableStateOf("") }
     var productToDelete by remember { mutableStateOf<Product?>(null) }
+    var showClearFavoritesMessage by remember { mutableStateOf(false) }
+    var deletingProduct by remember { mutableStateOf<Product?>(null) }
+    var deletingAllProducts by remember { mutableStateOf(false) }
+
+    //animation state
+    var startAnimation by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
 
     //filetered History for Searchbar
     val filteredHistory = currentHistoryState.filter { product ->
@@ -50,6 +66,8 @@ fun FavoriteScreen(
         }
     }
 
+
+    //page layout
     Box (
         modifier = Modifier.fillMaxSize()
     ) {
@@ -71,10 +89,15 @@ fun FavoriteScreen(
             }
 
             item {
-                HistoryScreenHeader(
-                    pagename = stringResource(R.string.favorites),
-                    downwriting = stringResource(R.string.favorites_downwriting)
-                )
+                SlideInFromBottom(
+                    visible = startAnimation,
+                    delayMillis = 0
+                ) {
+                    HistoryScreenHeader(
+                        pagename = stringResource(R.string.favorites),
+                        downwriting = stringResource(R.string.favorites_downwriting)
+                    )
+                }
             }
 
             item {
@@ -83,30 +106,67 @@ fun FavoriteScreen(
                     onSearchTextChange = { newText ->
                         searchText = newText
                     },
-                    searchBarText = stringResource(com.foodscanner.R.string.favorites_search)
+                    searchBarText = stringResource(R.string.favorites_search),
+                    visible = startAnimation,
+                    delayMillis = 80
                 )
             }
 
-            items(filteredHistory) { product ->
-                HistoryProductCard(
-                    product = product,
-                    onCardClick = { clickedProduct ->
-                        onHistoryProductClick(clickedProduct)
-                    },
-                    onCardLongClick = { longClickedProduct ->
-                        productToDelete = longClickedProduct
+            //favorit product cards + transition anim + delete anim
+            itemsIndexed(
+                items = filteredHistory,
+                key = { index, product ->
+                    product?.getCode() ?: "${product?.getName()}-$index"
+                }
+            ) { index, product ->
+                SwipeDeleteAnim(
+                    modifier = Modifier.animateItem(
+                        placementSpec = tween(
+                            durationMillis = 700,
+                            easing = FastOutSlowInEasing
+                        )
+                    ),
+                    isDeleting = deletingAllProducts || deletingProduct?.getCode() == product?.getCode(),
+                    delayMillis = if (deletingAllProducts) index.coerceAtMost(6) * 40 else 0,
+                    onDeleteAnimationFinished = {
+                        if (deletingProduct?.getCode() == product?.getCode()) {
+                            onDeleteHistoryProductClick(product)
+                            deletingProduct = null
+                        }
                     }
-                )
+                ) {
+                    HistoryProductCard(
+                        product = product,
+                        visible = startAnimation,
+                        delayMillis = 160 + index.coerceAtMost(6) * 60,
+                        onCardClick = { clickedProduct ->
+                            onHistoryProductClick(clickedProduct)
+                        },
+                        onCardLongClick = { longClickedProduct ->
+                            productToDelete = longClickedProduct
+                        }
+                    )
+                }
             }
 
             item {
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            item (){
+            item(
+                key = "clear_favorites_button"
+            ) {
                 HistoryClearButton(
+                    modifier = Modifier.animateItem(
+                        placementSpec = tween(
+                            durationMillis = 700,
+                            easing = FastOutSlowInEasing
+                        )
+                    ),
+                    visible = startAnimation,
+                    delayMillis = 220 + filteredHistory.size.coerceAtMost(6) * 60,
                     onClearHistoryClick = {
-                        onClearHistoryClick()
+                        showClearFavoritesMessage = true
                     },
                     clearlist = stringResource(R.string.clear_favorites)
                 )
@@ -117,13 +177,23 @@ fun FavoriteScreen(
             }
         }
 
+        //delay delete to give anim time
+        LaunchedEffect(deletingAllProducts) {
+            if (deletingAllProducts) {
+                delay(300 + filteredHistory.size.coerceAtMost(6) * 40L)
+                onClearHistoryClick()
+                deletingAllProducts = false
+            }
+        }
+
+        //"really delete?" one product from favorites
         DeleteMessage(
-            productToDelete = productToDelete,
+            showMessage = productToDelete != null,
             onDismiss = {
                 productToDelete = null
             },
             onConfirmDelete = {
-                onDeleteHistoryProductClick(productToDelete)
+                deletingProduct = productToDelete
                 productToDelete = null
             },
             deleteTitle = stringResource(R.string.delete_history_product_title),
@@ -133,17 +203,19 @@ fun FavoriteScreen(
             )
         )
 
-//      Preview Header + Footer - disable when running app
-//        VitalScanHeader(
-//            modifier = Modifier.align(Alignment.TopCenter)
-//        )
-//        VitalScanFooter(
-//            modifier = Modifier.align(Alignment.BottomCenter),
-//            onScanClick = {},
-//            onProductClick = {},
-//            onHistoryClick = {},
-//            onFavoritesClick = {}
-//        )
+        //"really delete?" all products from favorites
+        DeleteMessage(
+            showMessage = showClearFavoritesMessage,
+            onDismiss = {
+                showClearFavoritesMessage = false
+            },
+            onConfirmDelete = {
+                deletingAllProducts = true
+                showClearFavoritesMessage = false
+            },
+            deleteTitle = stringResource(R.string.clear_favorites) + "?",
+            deleteQuestion = stringResource(R.string.clear_favorites_question)
+        )
     }
 }
 

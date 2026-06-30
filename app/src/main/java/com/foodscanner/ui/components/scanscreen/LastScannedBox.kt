@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,13 +26,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 
 @Composable
 fun LastScannedBox(
     productName: String?,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    visible: Boolean = true,
+    delayMillis: Int = 0
 ) {
+    //fly in animation
+    val anim = rememberBottomSlideAnimValues(
+        visible = visible,
+        delayMillis = delayMillis
+    )
+
     val shape = RoundedCornerShape(16.dp)
 
     Box(
@@ -39,13 +49,18 @@ fun LastScannedBox(
             .width(300.dp)
             .height(100.dp)
             .customShadow(
-                color = Color(70, 101, 101, (255 * 0.22f).toInt()),
+                color = Color(70, 101, 101, (255 * anim.shadowAlpha.value).toInt()),
                 blurRadius = 20.dp,
                 offsetY = 8.dp
             )
     ) {
         Card(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    this.alpha = anim.alpha.value
+                    this.translationY = anim.translationY.value
+                },
             shape = shape,
             onClick = onClick,
             colors = CardDefaults.cardColors(

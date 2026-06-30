@@ -61,6 +61,8 @@ class Controller(
         return null
     }
 
+
+    //modify product states functions
     fun getProductHistory(): List<Product> {
         return productHistory.getHistory()
     }
@@ -73,10 +75,6 @@ class Controller(
     fun deleteHistoryProduct(product: Product?): Boolean {
         return productHistory.deleteProduct(product)
     }
-
-
-
-
 
     suspend fun addFavorite(product: Product?) {
         val barcode = product?.getCode() ?: return

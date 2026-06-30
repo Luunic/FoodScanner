@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun VitalScanHeader(
     modifier: Modifier = Modifier,

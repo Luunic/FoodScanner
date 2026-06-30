@@ -3,6 +3,7 @@ package com.foodscanner
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foodscanner.data.HealthScoreCalculator
 import com.foodscanner.data.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,11 +31,15 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
             _currentProduct.value = product
             _historyState.value = controller.getProductHistory()
 
-            val HealthScoreDebug = product?.calculateHealthScore()
-            Log.d(TAG, "HealthScore of ${product?.getName()}: $HealthScoreDebug")
+            val healthScoreDebug = product?.let {
+                HealthScoreCalculator.calculate(it)
+            }
+            Log.d(TAG, "HealthScore of ${product?.getName()}: $healthScoreDebug")
         }
     }
 
+
+    //modify product states functions
     fun setCurrentProduct(product: Product?) {
         Log.d("CurrentProduct", "setCurrentProduct: ${product?.getName()}")
         _currentProduct.value = product

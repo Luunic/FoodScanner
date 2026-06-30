@@ -11,13 +11,13 @@ import com.foodscanner.data.Product
 
 @Composable
 fun DeleteMessage(
-    productToDelete: Product?,
+    showMessage: Boolean,
     onDismiss: () -> Unit,
     onConfirmDelete: () -> Unit,
     deleteTitle: String,
     deleteQuestion: String
 ) {
-    if (productToDelete != null) {
+    if (showMessage) {
         AlertDialog(
             onDismissRequest = onDismiss,
             containerColor = Color.White,

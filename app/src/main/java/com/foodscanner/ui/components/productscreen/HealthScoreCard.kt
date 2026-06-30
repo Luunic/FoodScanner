@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,130 +29,138 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
 import com.foodscanner.ui.components.utility.customShadow
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 
 @Composable
 fun HealthScoreCard(
     modifier: Modifier = Modifier,
-    healthscorevalue: Int?
+    healthscorevalue: Int?,
+    visible: Boolean = true,
+    delayMillis: Int = 0
 ) {
+    //fly in animation
+    val anim = rememberBottomSlideAnimValues(
+        visible = visible,
+        delayMillis = delayMillis
+    )
 
+    //health score handling
     val healthScoreValueSafe = healthscorevalue ?: 0
     val healthScoreValueFraction = healthScoreValueSafe / 100f
     val rating = getHealthScoreRating(healthScoreValueSafe)
 
-    Card(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .height(210.dp)
             .customShadow(
-                color = Color(70, 101, 101, (255 * 0.22f).toInt()),
+                color = Color(70, 101, 101, (255 * anim.shadowAlpha.value).toInt()),
                 blurRadius = 20.dp,
                 offsetY = 8.dp
-            ),
-        shape = RoundedCornerShape(32.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF407E7D)
-        )
+            )
     ) {
-        Column(
+        Card(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .graphicsLayer {
+                    this.alpha = anim.alpha.value
+                    this.translationY = anim.translationY.value
+                },
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF407E7D)
+            )
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(R.string.health_score),
-                        color = Color.White.copy(alpha = 0.75f),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.5.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "$healthscorevalue/100",
-                        color = Color.White,
-                        fontSize = 40.sp,
-                        lineHeight = 48.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(
-                            color = Color.White.copy(alpha = 0.18f),
-                            shape = RoundedCornerShape(18.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.verified_24dp_ffffff_fill0_wght400_grad0_opsz24),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = rating,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                //Maybe implement later
-
-//                Spacer(modifier = Modifier.width(24.dp))
-//
-//                Text(
-//                    text = "High in fiber, low saturated fat",
-//                    color = Color.White.copy(alpha = 0.9f),
-//                    fontSize = 12.sp,
-//                    fontWeight = FontWeight.Medium
-//                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.2f),
-                        shape = CircleShape
-                    )
+                    .fillMaxSize()
+                    .padding(24.dp)
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.health_score),
+                            color = Color.White.copy(alpha = 0.75f),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.5.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = "$healthscorevalue/100",
+                            color = Color.White,
+                            fontSize = 40.sp,
+                            lineHeight = 48.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .background(
+                                color = Color.White.copy(alpha = 0.18f),
+                                shape = RoundedCornerShape(18.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.verified_24dp_ffffff_fill0_wght400_grad0_opsz24),
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = rating,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(healthScoreValueFraction)
-                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .height(10.dp)
                         .background(
-                            color = Color.White,
+                            color = Color.White.copy(alpha = 0.2f),
                             shape = CircleShape
                         )
-                )
+                ) {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(healthScoreValueFraction)
+                            .fillMaxHeight()
+                            .background(
+                                color = Color.White,
+                                shape = CircleShape
+                            )
+                    )
+                }
             }
         }
     }
 }
 
+//map health score to rating
 @Composable
 fun getHealthScoreRating(score: Int): String {
     val safeScore = score.coerceIn(0, 100)

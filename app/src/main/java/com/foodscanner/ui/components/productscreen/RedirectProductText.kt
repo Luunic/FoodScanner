@@ -11,27 +11,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
-import com.foodscanner.ui.components.utility.VitalScanFooter
-import com.foodscanner.ui.components.utility.VitalScanHeader
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 import com.foodscanner.ui.components.utility.customShadow
-import com.foodscanner.ui.theme.FoodScannerTheme
 
+//shows if no current/last scanned product
 @Composable
-fun RedirectProductText(onButtonClick:()-> Unit) {
+fun RedirectProductText(onButtonClick: () -> Unit) {
+
+    //animation vars (old)
+    var startAnimation by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
+    val textAnim = rememberBottomSlideAnimValues(
+        visible = startAnimation,
+        delayMillis = 0
+    )
+    val buttonAnim = rememberBottomSlideAnimValues(
+        visible = startAnimation,
+        delayMillis = 120
+    )
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -49,11 +66,15 @@ fun RedirectProductText(onButtonClick:()-> Unit) {
                             red = 70,
                             green = 101,
                             blue = 101,
-                            alpha = (255 * 0.22f).toInt()
+                            alpha = (255 * textAnim.shadowAlpha.value).toInt()
                         ),
                         blurRadius = 20.dp,
                         offsetY = 8.dp
-                    ),
+                    )
+                    .graphicsLayer {
+                        this.alpha = textAnim.alpha.value
+                        this.translationY = textAnim.translationY.value
+                    },
                 shape = RoundedCornerShape(32.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White
@@ -85,10 +106,19 @@ fun RedirectProductText(onButtonClick:()-> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .customShadow(
-                        color = Color(70, 101, 101, (255 * 0.22f).toInt()),
+                        color = Color(
+                            red = 70,
+                            green = 101,
+                            blue = 101,
+                            alpha = (255 * buttonAnim.shadowAlpha.value).toInt()
+                        ),
                         blurRadius = 20.dp,
                         offsetY = 8.dp
                     )
+                    .graphicsLayer {
+                        this.alpha = buttonAnim.alpha.value
+                        this.translationY = buttonAnim.translationY.value
+                    }
                     .clip(cardShape)
                     .clickable {
                         onButtonClick()
@@ -111,31 +141,6 @@ fun RedirectProductText(onButtonClick:()-> Unit) {
                     )
                 }
             }
-        }
-        VitalScanHeader(
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        VitalScanFooter(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onScanClick = {},
-            onProductClick = {},
-            onHistoryClick = {},
-            onFavoritesClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun RedirectProductTextPreview() {
-    FoodScannerTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color(0xFFF9F9F9)
-        ){
-            RedirectProductText(
-                onButtonClick = {}
-            )
         }
     }
 }

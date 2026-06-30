@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,16 +34,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 
-// Creates Scan Button
 @Composable
-fun CreateScanButton (
+fun CreateScanButton(
     modifier: Modifier = Modifier,
-    onScanRequested: () -> Unit
+    onScanRequested: () -> Unit,
+    visible: Boolean = true,
+    delayMillis: Int = 0
 ) {
+    //fly in animation
+    val anim = rememberBottomSlideAnimValues(
+        visible = visible,
+        delayMillis = delayMillis,
+        maxShadowAlpha = 0f
+    )
 
+    //fading circle animation
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-
     val progress by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -54,14 +63,17 @@ fun CreateScanButton (
             repeatMode = RepeatMode.Restart
         )
     )
-
     val waveSize = lerp(200.dp, 320.dp, progress)
     val waveAlpha = 0.50f * (1f - progress)
 
-    Box (
+
+    Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-    ){
+        modifier = modifier.graphicsLayer {
+            this.alpha = anim.alpha.value
+            this.translationY = anim.translationY.value
+        }
+    ) {
         Box(
             modifier = Modifier
                 .size(waveSize)
@@ -87,7 +99,7 @@ fun CreateScanButton (
                     contentDescription = "Scan",
                     modifier = Modifier.size(58.dp),
                     tint = Color.White
-              )
+                )
                 Text(
                     text = stringResource(R.string.tap_to_scan),
                     modifier = Modifier

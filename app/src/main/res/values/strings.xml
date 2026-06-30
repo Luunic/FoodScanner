@@ -47,12 +47,14 @@
 
     <string name="delete_history_product_title">Delete product?</string>
     <string name="delete_history_product_message">Do you really want to remove "%1$s" from your history?</string>
+    <string name="clear_history_question">Do you really want to clear your history?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="clear_history">Clear History</string>
 
     <string name="delete_favorite_product_message">Do you really want to remove "%1$s" from your Favorites?</string>
     <string name="clear_favorites">Clear Favorites</string>
+    <string name="clear_favorites_question">Do you really want to clear your favorites?</string>
 
     <string name="profil">Profil</string>
     <string name="howtogreet">How should VitalScan greet you?</string>

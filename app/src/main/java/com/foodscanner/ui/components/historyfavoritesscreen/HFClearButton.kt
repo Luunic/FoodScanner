@@ -13,48 +13,67 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.foodscanner.ui.components.utility.customShadow
+import com.foodscanner.ui.components.utility.animations.rememberBottomSlideAnimValues
 
 @Composable
 fun HistoryClearButton(
     modifier: Modifier = Modifier,
     clearlist: String,
-    onClearHistoryClick: () -> Unit
+    onClearHistoryClick: () -> Unit,
+    visible: Boolean = true,
+    delayMillis: Int = 0
 ) {
+    //fly in animation
+    val anim = rememberBottomSlideAnimValues(
+        visible = visible,
+        delayMillis = delayMillis
+    )
+
     val cardShape = RoundedCornerShape(32.dp)
 
-    Card(
-        shape = cardShape,
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .customShadow(
-                color = Color(70, 101, 101, (255 * 0.22f).toInt()),
+                color = Color(70, 101, 101, (255 * anim.shadowAlpha.value).toInt()),
                 blurRadius = 20.dp,
                 offsetY = 8.dp
             )
-            .clip(cardShape)
-            .clickable {
-                onClearHistoryClick()
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF407E7D)
-        ),
     ) {
-        Box(
+        Card(
+            shape = cardShape,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
-            contentAlignment = Alignment.Center
+                .clip(cardShape)
+                .graphicsLayer {
+                    this.alpha = anim.alpha.value
+                    this.translationY = anim.translationY.value
+                }
+                .clickable {
+                    onClearHistoryClick()
+                },
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF407E7D)
+            ),
         ) {
-            Text(
-                text = clearlist,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = clearlist,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+            }
         }
     }
 }

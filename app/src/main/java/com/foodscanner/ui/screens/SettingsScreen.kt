@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodscanner.ui.components.utility.VitalScanFooter
-import com.foodscanner.ui.components.utility.VitalScanHeader
 import com.foodscanner.ui.components.utility.customShadow
 import com.foodscanner.ui.theme.FoodScannerTheme
 import androidx.compose.foundation.layout.Row
@@ -48,7 +46,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.style.TextOverflow
 import com.foodscanner.R
 import com.foodscanner.service.allergenTranslations
-import java.util.Locale
 import androidx.compose.ui.platform.LocalLocale
 
 @Composable
@@ -59,30 +56,35 @@ fun SettingsScreen(
     onAllergensChange: (List<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    //states
     var localUsername by remember { mutableStateOf(username) }
-    val currentLanguage = if(LocalLocale.current.platformLocale.language == "de") "de" else "en"
+    var allergenMenuOpen by remember { mutableStateOf(false) }
+    var localSelectedAllergens by remember { mutableStateOf(selectedAllergens) }
 
+    //language
+    val currentLanguage = if(LocalLocale.current.platformLocale.language == "de") "de" else "en"
     val translationMap = allergenTranslations[currentLanguage] ?: allergenTranslations["en"] ?: emptyMap()
 
+    //sync username
     LaunchedEffect(username) {
         if (username != localUsername) {
             localUsername = username
         }
     }
 
+    //delay storage for better writeability
     LaunchedEffect(localUsername) {
         kotlinx.coroutines.delay(500)
         onUsernameChange(localUsername)
     }
 
-    var allergenMenuOpen by remember { mutableStateOf(false) }
-    var localSelectedAllergens by remember { mutableStateOf(selectedAllergens) }
-
+    //sync allergens
     LaunchedEffect(selectedAllergens) {
         localSelectedAllergens = selectedAllergens
     }
 
 
+    //page layout
     Box {
         Column(
             modifier = Modifier
@@ -98,6 +100,7 @@ fun SettingsScreen(
         ) {
             Spacer(modifier = Modifier.height(76.dp))
 
+            //profile
             Card(
                 modifier = modifier
                     .fillMaxWidth()
@@ -190,6 +193,7 @@ fun SettingsScreen(
                 }
             }
 
+            //allergens
             Card(
                 modifier = modifier
                     .fillMaxWidth()
@@ -290,8 +294,6 @@ fun SettingsScreen(
                         ) {
                             translationMap.keys.forEach { allergenKey ->
                                 val isSelected = localSelectedAllergens.contains(allergenKey)
-
-                                // 4. Den übersetzten Namen für die Anzeige aus der Map holen
                                 val translatedName = translationMap[allergenKey] ?: allergenKey
 
                                 DropdownMenuItem(
@@ -312,20 +314,19 @@ fun SettingsScreen(
                                             Spacer(modifier = Modifier.width(8.dp))
 
                                             Text(
-                                                text = translatedName, // <--- Zeigt z.B. "Erdnüsse" oder "Peanuts" an
+                                                text = translatedName,
                                                 color = Color(0xFF1A1C1C),
                                                 fontSize = 15.sp
                                             )
                                         }
                                     },
+                                    //write allergens selection
                                     onClick = {
-                                        // In selectedAllergens wird weiterhin nur der rohe Key ("peanuts") gespeichert!
                                         val newSelection = if (isSelected) {
                                             localSelectedAllergens - allergenKey
                                         } else {
                                             localSelectedAllergens + allergenKey
                                         }
-
                                         localSelectedAllergens = newSelection
                                         onAllergensChange(newSelection)
                                     }
@@ -336,21 +337,11 @@ fun SettingsScreen(
                 }
             }
         }
-
-
-        //      Preview Header + Footer - disable when running app
-//        VitalScanHeader(
-//            modifier = Modifier.align(Alignment.TopCenter)
-//        )
-//        VitalScanFooter(
-//            modifier = Modifier.align(Alignment.BottomCenter),
-//            onScanClick = {},
-//            onProductClick = {},
-//            onHistoryClick = {},
-//            onFavoritesClick = {}
-//        )
     }
 }
+
+
+
 
 @Preview
 @Composable
