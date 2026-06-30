@@ -1,6 +1,5 @@
 package com.foodscanner.ui.screens
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,24 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodscanner.ui.components.utility.VitalScanFooter
-import com.foodscanner.ui.components.utility.VitalScanHeader
 import com.foodscanner.ui.theme.FoodScannerTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.foodscanner.ui.components.historyscreen.HistoryScreenHeader
-import com.foodscanner.ui.components.historyscreen.HistorySearchBar
+import com.foodscanner.ui.components.historyfavoritesscreen.HistoryScreenHeader
+import com.foodscanner.ui.components.historyfavoritesscreen.HistorySearchBar
 import androidx.compose.foundation.lazy.items
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.foodscanner.data.Product
-import com.foodscanner.ui.components.historyscreen.HistoryClearButton
-import com.foodscanner.ui.components.historyscreen.HistoryProductCard
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.Text
+import com.foodscanner.ui.components.historyfavoritesscreen.HistoryClearButton
+import com.foodscanner.ui.components.historyfavoritesscreen.HistoryProductCard
 import androidx.compose.ui.res.stringResource
 import com.foodscanner.R
-
+import com.foodscanner.ui.components.historyfavoritesscreen.DeleteMessage
 
 @Composable
 fun HistoryScreen(
@@ -78,7 +71,10 @@ fun HistoryScreen(
             }
 
             item {
-                HistoryScreenHeader()
+                HistoryScreenHeader(
+                    pagename = stringResource(R.string.history),
+                    downwriting = stringResource(R.string.history_downwriting)
+                )
             }
 
             item {
@@ -86,7 +82,8 @@ fun HistoryScreen(
                     searchText = searchText,
                     onSearchTextChange = { newText ->
                         searchText = newText
-                    }
+                    },
+                    searchBarText = stringResource(com.foodscanner.R.string.history_search)
                 )
             }
 
@@ -110,7 +107,8 @@ fun HistoryScreen(
                 HistoryClearButton(
                     onClearHistoryClick = {
                         onClearHistoryClick()
-                    }
+                    },
+                    clearlist = stringResource(R.string.clear_history)
                 )
             }
 
@@ -119,48 +117,21 @@ fun HistoryScreen(
             }
         }
 
-
-        //"Really Delete" message+confirm
-        if (productToDelete != null) {
-            AlertDialog(
-                onDismissRequest = {
-                    productToDelete = null
-                },
-                containerColor = Color.White,
-                titleContentColor = Color(0xFF1A1C1C),
-                textContentColor = Color(0xFF1A1C1C),
-                title = {
-                    Text(text = stringResource(R.string.delete_history_product_title))
-                },
-                text = {
-                    Text(
-                        text = stringResource(
-                            R.string.delete_history_product_message,
-                            productToDelete?.getName() ?: stringResource(R.string.unknownp)
-                        )
-                    )
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            onDeleteHistoryProductClick(productToDelete)
-                            productToDelete = null
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.delete))
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            productToDelete = null
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.cancel))
-                    }
-                }
+        DeleteMessage(
+            productToDelete = productToDelete,
+            onDismiss = {
+                productToDelete = null
+            },
+            onConfirmDelete = {
+                onDeleteHistoryProductClick(productToDelete)
+                productToDelete = null
+            },
+            deleteTitle = stringResource(R.string.delete_history_product_title),
+            deleteQuestion = stringResource(
+                R.string.delete_history_product_message,
+                productToDelete?.getName() ?: stringResource(R.string.unknownp)
             )
-        }
+        )
 
 //      Preview Header + Footer - disable when running app
 //        VitalScanHeader(

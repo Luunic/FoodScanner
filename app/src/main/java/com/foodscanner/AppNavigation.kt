@@ -1,19 +1,16 @@
 package com.foodscanner
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.foodscanner.data.Product
 import com.foodscanner.service.startBarcodeScanner
 import com.foodscanner.ui.components.utility.VitalScanFooter
 import com.foodscanner.ui.components.utility.VitalScanHeader
@@ -35,25 +32,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.input.pointer.pointerInput
-
-//@Composable
-//fun StartApp(
-//    context: Context,
-//    viewModel: FoodScannerViewModel
-//) {
-//
-//
-//    val productList by viewModel.historyState.collectAsState()
-//    val currentProduct by viewModel.currentProduct.collectAsState()
-//    val firstName = productList.firstOrNull()?.getName()
-//        ?.takeIf { it.isNotBlank() } ?: "Kein Produkt"
-//    var productNameList = mutableListOf<String?>()
-//    productList.forEach { product ->
-//        productNameList.add(0, product.getName())
-//    }
-//    //ScanScreen(onScanRequested = { startBarcodeScanner(context,viewModel) })
-//    ProductScreen()
-//}
 
 private sealed class AppRoute(
     val route: String,
@@ -107,12 +85,17 @@ fun StartApp(
 ) {
 
     //initialize Controller/Routes/Product/History/etc
-    val TAG = "AppNavigation"
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: AppRoute.Scan.route
+
     val currentProduct by viewModel.currentProduct.collectAsState()
     val currentHistoryState by viewModel.historyState.collectAsState()
+    val currentFavoriteState by viewModel.favoriteState.collectAsState()
+    val isCurrentProductFavorite = currentFavoriteState.any {
+        it.getCode() == currentProduct?.getCode()
+    }
+
     val lastScannedProduct = currentHistoryState.firstOrNull()
 
     //Set Username
@@ -125,25 +108,6 @@ fun StartApp(
     val displayedUsername = savedUsername.ifBlank {
         stringResource(R.string.default_username)
     }
-
-
-
-    // mock Product for testing when scanner doesnt work
-    var mockProduct: Product? = null
-    var mockProduct2: Product? = null
-    var mockhistorylist = emptyList<Product?>()
-
-    LaunchedEffect(Unit) {
-        viewModel.clearCurrentProduct()
-    }
-
-//    LaunchedEffect(currentProduct) {
-//
-//        mockProduct = controller.getProductFromBarcode("4001518117316")!!
-//        mockProduct2 = controller.getProductFromBarcode("3017624010701")!!
-//        mockhistorylist = listOf(mockProduct,mockProduct2)
-//
-//    }
 
     //checks if transition to/from settings page
     fun isFadeTransition(
@@ -317,7 +281,7 @@ fun StartApp(
                 ScanScreen(
                     username = displayedUsername,
                     onScanRequested = {
-
+                        //old google barcode scanner
 //                        startBarcodeScanner(context, viewModel)
 
                         navController.navigate(AppRoute.Scanner.route) {
@@ -344,14 +308,17 @@ fun StartApp(
                         navController.navigate(AppRoute.Scan.route) {
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    onFavoriteClick = { product ->
+                        viewModel.toggleFavorite(product)
+                    },
+                    isFavorite = isCurrentProductFavorite
                 )
             }
 
             composable(AppRoute.History.route) {
                 HistoryScreen(
                     currentHistoryState = currentHistoryState,
-                    //currentHistoryState = mockhistorylist,
                     onHistoryProductClick = { product ->
                         viewModel.setCurrentProduct(product)
 
@@ -370,7 +337,21 @@ fun StartApp(
 
             composable(AppRoute.Favorit.route) {
                 FavoriteScreen(
+                    currentHistoryState = currentFavoriteState,
 
+                    onHistoryProductClick = { product ->
+                        viewModel.setCurrentProduct(product)
+
+                        navController.navigate(AppRoute.Product.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onClearHistoryClick = {
+                        viewModel.clearFavorites()
+                    },
+                    onDeleteHistoryProductClick = { product ->
+                        viewModel.deleteFavoriteProduct(product)
+                    }
                 )
             }
 
@@ -433,6 +414,8 @@ fun StartApp(
             },
             onProductClick = {
                 if (currentRoute != AppRoute.Product.route) {
+                    //if automatic to current product after leaving product page is wanted
+//                    viewModel.showLatestHistoryProduct()
                     navController.navigate(AppRoute.Product.route) {
                         popUpTo(AppRoute.Settings.route) {
                             inclusive = true

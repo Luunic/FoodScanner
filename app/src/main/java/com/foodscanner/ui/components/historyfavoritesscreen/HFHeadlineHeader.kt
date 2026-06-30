@@ -1,4 +1,4 @@
-package com.foodscanner.ui.components.historyscreen
+package com.foodscanner.ui.components.historyfavoritesscreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,21 +8,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun HistoryScreenHeader(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    pagename: String,
+    downwriting: String
+
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
     ) {
         Text(
-            text = stringResource(com.foodscanner.R.string.history),
+            text = pagename,
             fontSize = 32.sp,
             lineHeight = 40.sp,
             fontWeight = FontWeight.Bold,
@@ -33,7 +35,7 @@ fun HistoryScreenHeader(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = stringResource(com.foodscanner.R.string.history_downwriting),
+            text = downwriting,
             fontSize = 16.sp,
             lineHeight = 24.sp,
             fontWeight = FontWeight.Normal,

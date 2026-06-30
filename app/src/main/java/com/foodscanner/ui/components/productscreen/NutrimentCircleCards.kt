@@ -81,13 +81,8 @@ fun NutrimentCircles(
     LaunchedEffect(Unit) {
         while (true) {
             delay(5_000)
-
-            nutrientAlphaTarget = 0f
             delay(350)
-
             selectedNutrientIndex = (selectedNutrientIndex + 1) % nutrientItems.size
-
-            nutrientAlphaTarget = 1f
         }
     }
 
@@ -97,6 +92,7 @@ fun NutrimentCircles(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+        //write seperate function for angle calculations (someday)
         var carbsangle: Float = 0.0F
         if (carbs != null) {
             carbsangle = (carbs/100 * 360f ).toFloat()

@@ -11,38 +11,62 @@ class Favorites(private val storage: Storage) {
     val fileName = "favorites.json"
 
     fun addProduct(product: JsonElement) {
-        val history = storage.loadStorage(fileName)
+        val favorites = storage.loadStorage(fileName)
 
-        // TODO Following two lines are messy and definily need to be refactored
-        val barcode = product.jsonObject["product"]?.jsonObject?.get("code")?.jsonPrimitive?.content
-        history.removeIf {it.jsonObject["product"]?.jsonObject?.get("code")?.jsonPrimitive?.content == barcode}
+        val barcode = product.jsonObject["product"]
+            ?.jsonObject
+            ?.get("code")
+            ?.jsonPrimitive
+            ?.content
 
-        history.add(0, product)
-
-        if (history.size > storage.maxHistorySize) {
-            history.removeAt(history.lastIndex)
+        favorites.removeIf {
+            it.jsonObject["product"]
+                ?.jsonObject
+                ?.get("code")
+                ?.jsonPrimitive
+                ?.content == barcode
         }
-        storage.saveStorage(history, fileName)
+
+        favorites.add(0, product)
+
+        storage.saveStorage(favorites, fileName)
     }
 
     fun getFavorites(): List<Product> {
-        val history = storage.loadStorage(fileName)
-
+        val favorites = storage.loadStorage(fileName)
         val list = mutableListOf<Product>()
 
-        for (product in history) {
+        for (product in favorites) {
             list.add(ProductParser.parse(product))
         }
+
         return list
     }
+
     fun clearFavorites(): Boolean {
-        var bool = true
-        val history = storage.loadStorage(fileName)
-        if(history.isEmpty()) bool = false
-        history.clear()
-        storage.saveStorage(history, fileName)
-        return bool
+        val favorites = storage.loadStorage(fileName)
+        if (favorites.isEmpty()) return false
+
+        favorites.clear()
+        storage.saveStorage(favorites, fileName)
+        return true
     }
 
+    fun deleteProduct(product: Product?): Boolean {
+        if (product == null) return false
 
+        val favorites = storage.loadStorage(fileName)
+        val barcode = product.getCode()
+
+        val removed = favorites.removeIf {
+            it.jsonObject["product"]
+                ?.jsonObject
+                ?.get("code")
+                ?.jsonPrimitive
+                ?.content == barcode
+        }
+
+        storage.saveStorage(favorites, fileName)
+        return removed
+    }
 }

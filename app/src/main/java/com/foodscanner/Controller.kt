@@ -7,8 +7,6 @@ import com.foodscanner.storage.ProductHistory
 import com.foodscanner.service.ProductParser
 import com.foodscanner.storage.Favorites
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -21,13 +19,10 @@ class Controller(
     private val productHistory: ProductHistory,
     private val favorites: Favorites,
 ) {
-    val TAG = "Controller"
+    val tag = "Controller"
 
     private val _historyFlow = MutableStateFlow<List<Product>>(productHistory.getHistory())
-    val historyFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
-
     private val _favoriteFlow = MutableStateFlow<List<Product>>(favorites.getFavorites())
-    val favoriteFlow: StateFlow<List<Product>> = _historyFlow.asStateFlow()
 
     private suspend fun getDataFromApi(barcode: String): JsonElement? {
         // Call the Api
@@ -35,7 +30,7 @@ class Controller(
             val response = OpenFoodFactsApi.retrofitService.getData(barcode)
             return Json.parseToJsonElement(response) // returns jsonElement
         } catch(e: Exception) {
-            Log.e(TAG, "Exception $e while calling the Api")
+            Log.e(tag, "Exception $e while calling the Api")
          return null
         }
     }
@@ -75,20 +70,45 @@ class Controller(
         return bool
     }
 
-    fun getFavorites(): List<Product> {
-        return favorites.getFavorites()
-    }
-    fun clearFavorites(): Boolean {
-        val bool = favorites.clearFavorites()
-        _historyFlow.value = emptyList()
-        return bool
-    }
-
     fun deleteHistoryProduct(product: Product?): Boolean {
         return productHistory.deleteProduct(product)
     }
-//    fun addFavorite(product: Product) {
-//        favorites.addProduct(product)
-//    }
 
+
+
+
+
+    suspend fun addFavorite(product: Product?) {
+        val barcode = product?.getCode() ?: return
+
+        val jsonData = getDataFromApi(barcode) ?: return
+
+        val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val dateString = formatter.format(Date())
+
+        val extendedData = JsonObject(
+            (jsonData as JsonObject) + mapOf(
+                "date" to JsonPrimitive(dateString)
+            )
+        )
+
+        favorites.addProduct(extendedData)
+        _favoriteFlow.value = favorites.getFavorites()
+    }
+
+    fun deleteFavoriteProduct(product: Product?): Boolean {
+        val bool = favorites.deleteProduct(product)
+        _favoriteFlow.value = favorites.getFavorites()
+        return bool
+    }
+
+    fun clearFavorites(): Boolean {
+        val bool = favorites.clearFavorites()
+        _favoriteFlow.value = emptyList()
+        return bool
+    }
+
+    fun getFavorites(): List<Product> {
+        return favorites.getFavorites()
+    }
 }

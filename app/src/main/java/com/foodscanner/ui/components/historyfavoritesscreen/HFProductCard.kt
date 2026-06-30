@@ -1,4 +1,4 @@
-package com.foodscanner.ui.components.historyscreen
+package com.foodscanner.ui.components.historyfavoritesscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -50,6 +50,7 @@ fun HistoryProductCard(
     val nutriScore = when {
         rawNutriScore.isNullOrBlank() -> "?"
         rawNutriScore.equals("unknown", ignoreCase = true) -> "?"
+        rawNutriScore.equals("not-applicable", ignoreCase = true) -> "?"
         else -> rawNutriScore.uppercase()
     }
 

@@ -1,4 +1,4 @@
-package com.foodscanner.ui.components.historyscreen
+package com.foodscanner.ui.components.historyfavoritesscreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.ui.components.utility.customShadow
@@ -21,6 +20,7 @@ import com.foodscanner.ui.components.utility.customShadow
 fun HistorySearchBar(
     modifier: Modifier = Modifier,
     searchText: String = "",
+    searchBarText: String,
     onSearchTextChange: (String) -> Unit = {}
 ) {
     TextField(
@@ -36,7 +36,7 @@ fun HistorySearchBar(
             ),
         placeholder = {
             Text(
-                text = stringResource(com.foodscanner.R.string.history_search),
+                text = searchBarText,
                 fontSize = 16.sp,
                 color = Color(0xFF6F7978)
             )

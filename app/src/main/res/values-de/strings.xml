@@ -42,10 +42,16 @@
     <string name="unknownd">Unbekanntes Datum</string>
     <string name="clear_history">Verlauf löschen</string>
 
+    <string name="favorites_downwriting">Hier siehst du deine favorisierten Produkte</string>
+    <string name="favorites_search">Favoriten durchsuchen...</string>
+
     <string name="delete_history_product_title">Produkt löschen?</string>
     <string name="delete_history_product_message">Möchtest du "%1$s" wirklich aus dem Verlauf entfernen?</string>
     <string name="delete">Löschen</string>
     <string name="cancel">Abbrechen</string>
+
+    <string name="delete_favorite_product_message">Möchtest du "%1$s" wirklich aus deinen Favoriten entfernen?</string>
+    <string name="clear_favorites">Alle Favoriten Löschen</string>
 
     <string name="profil">Profil</string>
     <string name="howtogreet">Wie soll VitalScan dich begrüßen?</string>

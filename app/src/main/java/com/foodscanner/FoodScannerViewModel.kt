@@ -13,11 +13,16 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
 
     // Variables that hold the state
     val TAG = "ViewModel"
-    private val _historyState = MutableStateFlow<List<Product>>(controller.getProductHistory())
+    private val initialHistory = controller.getProductHistory()
+
+    private val _historyState = MutableStateFlow<List<Product>>(initialHistory)
     val historyState: StateFlow<List<Product>> = _historyState.asStateFlow() // read only!
 
-    private val _currentProduct = MutableStateFlow<Product?>(controller.getProductHistory().firstOrNull())
+    private val _currentProduct = MutableStateFlow<Product?>(initialHistory.firstOrNull())
     val currentProduct: StateFlow<Product?> = _currentProduct.asStateFlow()
+
+    private val _favoriteState = MutableStateFlow<List<Product>>(controller.getFavorites())
+    val favoriteState: StateFlow<List<Product>> = _favoriteState.asStateFlow()
 
     fun scanBarcode(barcode: String) {
         viewModelScope.launch {
@@ -35,9 +40,8 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
         _currentProduct.value = product
     }
 
-    fun clearHistory() {
-        controller.clearProductHistory()
-        _historyState.value = controller.getProductHistory()
+    fun showLatestHistoryProduct() {
+        _currentProduct.value = _historyState.value.firstOrNull()
     }
 
     fun clearCurrentProduct() {
@@ -45,8 +49,51 @@ class FoodScannerViewModel(private val controller: Controller) : ViewModel() {
         _currentProduct.value = null
     }
 
+    fun clearHistory() {
+        controller.clearProductHistory()
+        _historyState.value = controller.getProductHistory()
+        clearCurrentProduct()
+    }
+
     fun deleteHistoryProduct(product: Product?) {
         controller.deleteHistoryProduct(product)
-        _historyState.value = controller.getProductHistory()
+
+        val updatedHistory = controller.getProductHistory()
+        _historyState.value = updatedHistory
+
+        if (_currentProduct.value?.getCode() == product?.getCode()) {
+            _currentProduct.value = updatedHistory.firstOrNull()
+        }
+    }
+
+    fun addFavorite(product: Product?) {
+        viewModelScope.launch {
+            controller.addFavorite(product)
+            _favoriteState.value = controller.getFavorites()
+        }
+    }
+
+    fun deleteFavoriteProduct(product: Product?) {
+        controller.deleteFavoriteProduct(product)
+        _favoriteState.value = controller.getFavorites()
+    }
+
+    fun clearFavorites() {
+        controller.clearFavorites()
+        _favoriteState.value = controller.getFavorites()
+    }
+
+    fun toggleFavorite(product: Product?) {
+        if (product == null) return
+
+        val isAlreadyFavorite = _favoriteState.value.any {
+            it.getCode() == product.getCode()
+        }
+
+        if (isAlreadyFavorite) {
+            deleteFavoriteProduct(product)
+        } else {
+            addFavorite(product)
+        }
     }
 }

@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val TAG = "MainActivity" // for logging
         val storage = LocalStorage(context = applicationContext)
         controller =
             Controller(productHistory = ProductHistory(storage = storage), favorites = Favorites(

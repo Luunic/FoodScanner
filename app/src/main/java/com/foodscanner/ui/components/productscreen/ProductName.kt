@@ -21,12 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodscanner.R
+import com.foodscanner.data.Product
 import com.foodscanner.ui.components.utility.customShadow
 
 @Composable
 fun ProductName(
     modifier: Modifier = Modifier,
-    productName: String?
+    productName: String?,
+    currentProduct: Product?,
+    onFavoriteClick: (Product?) -> Unit,
+    isFavorite: Boolean
 ){
     Row (
         modifier = modifier
@@ -50,10 +54,14 @@ fun ProductName(
                 ),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White
+                containerColor = if (isFavorite) {
+                    Color(0xFF246565)
+                } else {
+                    Color.White
+                }
             ),
             onClick = {
-                //add product to favorites
+                onFavoriteClick(currentProduct)
             }
         ) {
             Box(
@@ -63,7 +71,11 @@ fun ProductName(
                 Icon(
                     painter = painterResource(R.drawable.favorite_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
                     contentDescription = "Favorite",
-                    tint = Color(0xFF246565),
+                    tint = if (isFavorite) {
+                        Color.White
+                    } else {
+                        Color(0xFF246565)
+                    },
                     modifier = Modifier.size(24.dp)
                 )
             }
